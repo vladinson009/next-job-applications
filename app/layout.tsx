@@ -30,7 +30,11 @@ export default function RootLayout({
       >
         <Navbar />
         <main className="flex-1">{children}</main>
-        <footer></footer>
+        <footer className="relative bg-foreground  py-15">
+          <p className="mx-auto w-fit text-center p-1 rounded-[5px] bg-color1">
+            Footer
+          </p>
+        </footer>
       </body>
     </html>
   );
