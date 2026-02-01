@@ -5,7 +5,7 @@ import { db } from './db';
 import { UsersTable } from './db/schema';
 import { compare } from 'bcrypt';
 import { eq } from 'drizzle-orm';
-import { signInSchema } from '@/lib/validations/userValidation';
+import { signInSchema } from '@/validations/userValidation';
 import GitHub from 'next-auth/providers/github';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
