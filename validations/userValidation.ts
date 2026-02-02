@@ -3,14 +3,15 @@ import z from 'zod';
 // ! Helpers
 const passwordSchema = z
   .string('Password is required')
-  .min(1, 'Password is required')
   .min(8, 'Password must be more than 8 characters')
   .max(32, 'Password must be less than 32 characters');
 
 const passwordMatchSchema = z
   .object({
     password: passwordSchema,
-    passwordConfirm: z.string(),
+    passwordConfirm: z
+      .string('Repeat password is required')
+      .min(1, 'Repeat password is required'),
   })
   .superRefine((data, ctx) => {
     if (data.password !== data.passwordConfirm) {
@@ -32,9 +33,9 @@ export const signInSchema = z.object({
 
 export const signUpSchema = z
   .object({
-    name: z.string('Invalid name').min(1, 'Name is required'),
+    username: z
+      .string('Invalid username')
+      .min(4, 'Username must be at least 4 characters'),
     email: emailSchema,
-    image: z.string().optional(),
-    age: z.number().optional(),
   })
   .and(passwordMatchSchema);
