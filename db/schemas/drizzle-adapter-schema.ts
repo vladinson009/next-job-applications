@@ -13,7 +13,7 @@ export const roleEnum = pgEnum('role', ['user', 'admin', 'moderator']);
 
 export const UsersTable = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),
-  name: varchar('name', { length: 100 }).notNull(),
+  username: varchar('username', { length: 100 }).notNull(),
   email: varchar('email', { length: 100 }).notNull().unique(),
   emailVerified: timestamp('email_verified', { mode: 'date' }),
   image: text('image'),
