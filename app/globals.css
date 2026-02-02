@@ -153,4 +153,7 @@
   p {
     @apply text-[1rem] sm:text-[1.125rem] leading-6 sm:leading-normal;
   }
+  button {
+    @apply cursor-pointer;
+  }
 }
