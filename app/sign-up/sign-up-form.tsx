@@ -2,7 +2,6 @@
 
 import { signUpSchema } from '@/validations/userValidation';
 import { useForm } from 'react-hook-form';
-import z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import {
   Form,
@@ -14,37 +13,123 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-
-type SignUpSchema = z.infer<typeof signUpSchema>;
-type DataOutput = z.output<typeof signUpSchema>;
+import { CreateUserError, SignUpOutputSchema, SignUpSchema } from '@/types/User';
+import { createUser } from './actions/create-user';
+import { toast } from 'sonner';
 
 export default function SignUpForm() {
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
+    defaultValues: {
+      username: '',
+      email: '',
+      password: '',
+      passwordConfirm: '',
+    },
   });
 
-  function onSubmit(data: DataOutput) {
-    console.log(data);
+  async function onSubmit(data: SignUpOutputSchema) {
+    try {
+      const newUser = await createUser(data);
+      console.log('User created from onSubmit', newUser);
+    } catch (error) {
+      const err = error as CreateUserError;
+      if (err.type === 'validation') {
+        err.issues.forEach((issue) => {
+          const fieldName = issue.path[0] as keyof SignUpSchema;
+          form.setError(fieldName, { type: 'server', message: issue.message });
+        });
+      } else if (err.type === 'server') {
+        toast.error(err.message);
+        console.log(err.originalError);
+      }
+    }
   }
-
+  /**
+   * username
+   * email
+   * password
+   * passwordConfirm
+   */
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)}>
+      <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="username">Username</FormLabel>
+              <FormControl>
+                <Input
+                  id="username"
+                  type="text"
+                  disabled={form.formState.isSubmitting}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <FormField
           control={form.control}
           name="email"
           render={({ field }) => (
             <FormItem>
-              <FormLabel></FormLabel>
+              <FormLabel htmlFor="email">Email</FormLabel>
               <FormControl>
-                <Input {...field} />
+                <Input
+                  id="email"
+                  type="email"
+                  disabled={form.formState.isSubmitting}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="password">Password</FormLabel>
+              <FormControl>
+                <Input
+                  id="password"
+                  type="password"
+                  disabled={form.formState.isSubmitting}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          control={form.control}
+          name="passwordConfirm"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="password-confirm">Repeat password</FormLabel>
+              <FormControl>
+                <Input
+                  id="password-confirm"
+                  type="password"
+                  disabled={form.formState.isSubmitting}
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
 
-        <Button type="submit">Submit</Button>
+        <Button disabled={form.formState.isSubmitting} type="submit">
+          {form.formState.isSubmitting ? 'Thinking...' : 'Sign up'}
+        </Button>
       </form>
     </Form>
   );
