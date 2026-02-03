@@ -9,6 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import SignUpForm from './sign-up-form';
+import Link from 'next/link';
 
 export default function SignUpPage() {
   return (
@@ -26,7 +27,15 @@ export default function SignUpPage() {
           <SignUpForm />
         </CardContent>
         <CardFooter className="justify-center">
-          <p>Footer</p>
+          <p className="text-muted-foreground text-sm">
+            Already have an account? Sign In{' '}
+            <Link
+              className="underline text-foreground hover:no-underline"
+              href="/sign-in"
+            >
+              here
+            </Link>
+          </p>
         </CardFooter>
       </Card>
     </Container>

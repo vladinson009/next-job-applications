@@ -1,30 +1,67 @@
 'use server';
+
 import type {
+  UserResponse,
   InsertNewUser,
-  SafeUserFromDB,
   SignUpOutputSchema,
-  ZodServerValidationError,
 } from '@/types/User';
+import type { ActionError } from '@/types/Error';
 
 import { db } from '@/db';
 import { UsersTable } from '@/db/schema';
 import { signUpSchema } from '@/validations/userValidation';
 import { hash } from 'bcrypt';
 import { ZodError } from 'zod';
+import { eq, or } from 'drizzle-orm';
+import { $ZodIssue } from 'zod/v4/core';
 
 export async function createUser(
   userInput: SignUpOutputSchema,
-): Promise<{ user: SafeUserFromDB; success: boolean }> {
+): Promise<UserResponse> {
   try {
-    // Validate user inputs
-    const {
-      email,
-      password: plainPassword,
-      username,
-    } = await signUpSchema.parseAsync(userInput);
+    // Validate user inputs with zod
+    const { email, password, username } = await signUpSchema.parseAsync(userInput);
+
+    // Check for existing user
+    const [existingUser] = await db
+      .select({ email: UsersTable.email, username: UsersTable.username })
+      .from(UsersTable)
+      .where(or(eq(UsersTable.email, email), eq(UsersTable.username, username)))
+      .limit(1);
+
+    if (existingUser) {
+      const issues: $ZodIssue[] = [];
+      const existingEmail = existingUser.email === email;
+      const existingUsername = existingUser.username === username;
+
+      if (existingEmail) {
+        issues.push({
+          path: ['email'],
+          message: 'Email already exist',
+          code: 'custom',
+        });
+      }
+      if (existingUsername) {
+        issues.push({
+          path: ['username'],
+          message: 'Username already exist',
+          code: 'custom',
+        });
+      }
+
+      const error = {
+        type: 'validation',
+        issues,
+      } satisfies ActionError;
+
+      return {
+        success: false,
+        error,
+      };
+    }
 
     // Hash password
-    const password = await hash(plainPassword, 12);
+    const hashedPassword = await hash(password, 12);
 
     // Insert user into DB
     const [user] = await db
@@ -32,11 +69,9 @@ export async function createUser(
       .values({
         username,
         email,
-        password,
+        password: hashedPassword,
       } satisfies InsertNewUser)
       .returning();
-
-    console.log('User from createUser', user);
 
     const returnValue = {
       id: user.id,
@@ -51,20 +86,28 @@ export async function createUser(
       user: returnValue,
     };
   } catch (err) {
+    // Zod validation error
     if (err instanceof ZodError) {
+      const issues = err.issues;
+      const type = 'validation';
+      const error: ActionError = { type, issues };
+
       console.error('Zod Validation failed on the server', err.issues[0]);
-      const issues = err.issues.map((i) => ({
-        path: i.path.map(String),
-        message: i.message,
-      }));
-      const error = { type: 'validation', issues };
-      throw error as ZodServerValidationError;
+      return {
+        success: false,
+        error,
+      };
     }
+
+    //Internal server error
     console.error('Failed to create user:', err);
-    throw {
-      type: 'server',
-      message: 'Failed to create user',
-      originalError: err,
+
+    return {
+      success: false,
+      error: {
+        type: 'server',
+        message: "Can't create an user. It's on us",
+      } satisfies ActionError,
     };
   }
 }

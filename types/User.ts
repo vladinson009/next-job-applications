@@ -1,7 +1,8 @@
 import { UsersTable } from '@/db/schema';
-import { signUpSchema } from '@/validations/userValidation';
+import { signInSchema, signUpSchema } from '@/validations/userValidation';
 import { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import z from 'zod';
+import { ActionError } from './Error';
 
 type UserFromDB = InferSelectModel<typeof UsersTable>; // full row type
 export type InsertNewUser = InferInsertModel<typeof UsersTable>; // type for insert
@@ -13,15 +14,9 @@ export type SafeUserFromDB = Omit<
 export type SignUpSchema = z.infer<typeof signUpSchema>;
 export type SignUpOutputSchema = z.output<typeof signUpSchema>;
 
-//! Error types:
-export type ZodServerValidationError = {
-  type: 'validation';
-  issues: Array<{
-    path: string[]; // field names e.g., ['email'] or ['passwordConfirm']
-    message: string;
-  }>;
-};
+export type UserResponse =
+  | { success: true; user: SafeUserFromDB }
+  | { success: false; error: ActionError };
 
-export type CreateUserError =
-  | ZodServerValidationError
-  | { type: 'server'; message: string; originalError?: unknown };
+export type SignInSchema = z.infer<typeof signInSchema>;
+export type SignInOutputSchema = z.output<typeof signInSchema>;

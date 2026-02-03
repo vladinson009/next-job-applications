@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { CreateUserError, SignUpOutputSchema, SignUpSchema } from '@/types/User';
+import { SignUpOutputSchema, SignUpSchema } from '@/types/User';
 import { createUser } from './actions/create-user';
 import { toast } from 'sonner';
 
@@ -30,19 +30,22 @@ export default function SignUpForm() {
 
   async function onSubmit(data: SignUpOutputSchema) {
     try {
-      const newUser = await createUser(data);
-      console.log('User created from onSubmit', newUser);
-    } catch (error) {
-      const err = error as CreateUserError;
-      if (err.type === 'validation') {
-        err.issues.forEach((issue) => {
-          const fieldName = issue.path[0] as keyof SignUpSchema;
-          form.setError(fieldName, { type: 'server', message: issue.message });
-        });
-      } else if (err.type === 'server') {
-        toast.error(err.message);
-        console.log(err.originalError);
+      const response = await createUser(data);
+
+      if (!response.success) {
+        const err = response.error;
+        if (err.type === 'validation') {
+          err.issues.forEach((issue) => {
+            const fieldName = issue.path[0] as keyof SignUpSchema;
+            form.setError(fieldName, { type: 'server', message: issue.message });
+          });
+        } else {
+          toast.error(err.message);
+        }
+        return;
       }
+    } catch (error) {
+      console.log('SignUpForm', error);
     }
   }
   /**
