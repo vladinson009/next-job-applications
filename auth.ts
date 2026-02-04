@@ -18,7 +18,11 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         credential: {},
       },
       authorize: async (credentials) => {
-        const { credential, password } = await signInSchema.parseAsync(credentials);
+        const { data, success } = signInSchema.safeParse(credentials);
+        if (success === false) {
+          return null;
+        }
+        const { credential, password } = data;
         const [user] = await db
           .select()
           .from(UsersTable)
@@ -36,15 +40,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         //   return null;
         // }
 
-        if (!user.password) {
-          return null;
-        }
-        const isValid = await compare(password, user.password);
+        if (!user.password) return null;
 
+        const isValid = await compare(password, user.password);
         if (!isValid) return null;
+
         return {
           id: user.id,
-          username: user.username,
+          name: user.username,
           email: user.email,
           role: user.role,
         };
@@ -56,5 +59,20 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
   ],
   session: {
     strategy: 'jwt',
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+        token.name = user.name;
+      }
+      return token;
+    },
+    async session({ session, token }) {
+      session.user.id = token.id as string;
+      session.user.name = token.name as string;
+
+      return session;
+    },
   },
 });
