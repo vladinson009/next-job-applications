@@ -1,17 +1,12 @@
 'use server';
 
-import type {
-  UserResponse,
-  InsertNewUser,
-  SignUpOutputSchema,
-} from '@/types/User';
+import type { UserResponse, InsertNewUser, SignUpOutputSchema } from '@/types/User';
 import type { ActionError } from '@/types/Error';
 
 import { db } from '@/db';
 import { UsersTable } from '@/db/schema';
 import { signUpSchema } from '@/validations/userValidation';
 import { hash } from 'bcrypt';
-import { ZodError } from 'zod';
 import { eq, or } from 'drizzle-orm';
 import { $ZodIssue } from 'zod/v4/core';
 
@@ -20,7 +15,21 @@ export async function createUser(
 ): Promise<UserResponse> {
   try {
     // Validate user inputs with zod
-    const { email, password, username } = await signUpSchema.parseAsync(userInput);
+    const parsedData = signUpSchema.safeParse(userInput);
+
+    // Zod validation error
+    if (parsedData.success === false) {
+      const issues = parsedData.error.issues;
+      const type = 'validation';
+      const error: ActionError = { type, issues };
+
+      console.error('Zod Validation failed on the server', issues[0].message);
+      return {
+        success: false,
+        error,
+      };
+    }
+    const { email, password, username } = parsedData.data;
 
     // Check for existing user
     const [existingUser] = await db
@@ -53,7 +62,6 @@ export async function createUser(
         type: 'validation',
         issues,
       } satisfies ActionError;
-
       return {
         success: false,
         error,
@@ -73,32 +81,13 @@ export async function createUser(
       } satisfies InsertNewUser)
       .returning();
 
-    const returnValue = {
-      id: user.id,
-      username: user.username,
-      email: user.email,
-      role: user.role,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt,
-    };
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { password: _, ...returnValue } = user;
     return {
       success: true,
       user: returnValue,
     };
   } catch (err) {
-    // Zod validation error
-    if (err instanceof ZodError) {
-      const issues = err.issues;
-      const type = 'validation';
-      const error: ActionError = { type, issues };
-
-      console.error('Zod Validation failed on the server', err.issues[0]);
-      return {
-        success: false,
-        error,
-      };
-    }
-
     //Internal server error
     console.error('Failed to create user:', err);
 
