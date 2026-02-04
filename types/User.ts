@@ -6,10 +6,7 @@ import { ActionError } from './Error';
 
 type UserFromDB = InferSelectModel<typeof UsersTable>; // full row type
 export type InsertNewUser = InferInsertModel<typeof UsersTable>; // type for insert
-export type SafeUserFromDB = Omit<
-  UserFromDB,
-  'password' | 'emailVerified' | 'image' | 'age'
->;
+export type SafeUserFromDB = Omit<UserFromDB, 'password'>;
 
 export type SignUpSchema = z.infer<typeof signUpSchema>;
 export type SignUpOutputSchema = z.output<typeof signUpSchema>;
