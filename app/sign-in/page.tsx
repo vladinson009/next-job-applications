@@ -10,6 +10,9 @@ import {
 } from '@/components/ui/card';
 import Link from 'next/link';
 import SignInForm from './sign-in-form';
+import { Github } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import ProviderBtn from './provider-btn';
 // import SignUpForm from './sign-up-form';
 
 export default function SignInPage() {
@@ -21,7 +24,12 @@ export default function SignInPage() {
           <CardDescription>
             Sign in by email or some of our providers.
           </CardDescription>
-          <CardAction></CardAction>
+          <CardAction>
+            <ProviderBtn provider="github">
+              <Github />
+            </ProviderBtn>{' '}
+            <ProviderBtn provider="google">Google</ProviderBtn>
+          </CardAction>
         </CardHeader>
 
         <CardContent>
