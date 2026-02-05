@@ -29,19 +29,19 @@ export async function createUser(
         error,
       };
     }
-    const { email, password, username } = parsedData.data;
+    const { email, password, name } = parsedData.data;
 
     // Check for existing user
     const [existingUser] = await db
-      .select({ email: UsersTable.email, username: UsersTable.username })
+      .select({ email: UsersTable.email, name: UsersTable.name })
       .from(UsersTable)
-      .where(or(eq(UsersTable.email, email), eq(UsersTable.username, username)))
+      .where(or(eq(UsersTable.email, email), eq(UsersTable.name, name)))
       .limit(1);
 
     if (existingUser) {
       const issues: $ZodIssue[] = [];
       const existingEmail = existingUser.email === email;
-      const existingUsername = existingUser.username === username;
+      const existingUsername = existingUser.name === name;
 
       if (existingEmail) {
         issues.push({
@@ -52,7 +52,7 @@ export async function createUser(
       }
       if (existingUsername) {
         issues.push({
-          path: ['username'],
+          path: ['name'],
           message: 'Username already exist',
           code: 'custom',
         });
@@ -75,7 +75,7 @@ export async function createUser(
     const [user] = await db
       .insert(UsersTable)
       .values({
-        username,
+        name,
         email,
         password: hashedPassword,
       } satisfies InsertNewUser)

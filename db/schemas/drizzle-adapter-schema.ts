@@ -11,11 +11,11 @@ import {
 
 export const roleEnum = pgEnum('role', ['user', 'admin', 'moderator']);
 
-export const UsersTable = pgTable('users', {
+export const UsersTable = pgTable('user', {
   id: uuid('id').defaultRandom().primaryKey(),
-  username: varchar('username', { length: 100 }).notNull().unique(),
+  name: varchar('name', { length: 100 }).notNull().unique(),
   email: varchar('email', { length: 100 }).notNull().unique(),
-  emailVerified: timestamp('email_verified', { mode: 'date' }),
+  emailVerified: timestamp('emailVerified', { mode: 'date' }),
   image: text('image'),
 
   // Custom fields
@@ -28,23 +28,22 @@ export const UsersTable = pgTable('users', {
 });
 
 export const AccountsTable = pgTable(
-  'accounts',
+  'account',
   {
-    userId: uuid('user_id')
+    userId: uuid('userId')
       .notNull()
       .references(() => UsersTable.id, { onDelete: 'cascade' }),
 
     type: text('type').notNull(),
     provider: text('provider').notNull(),
-    providerAccountId: text('provider_account_id').notNull(),
-
-    refresh_token: text('refresh_token'),
-    access_token: text('access_token'),
-    expires_at: integer('expires_at'),
-    token_type: text('token_type'),
+    providerAccountId: text('providerAccountId').notNull(),
+    refreshToken: text('refresh_token'),
+    accessToken: text('access_token'),
+    expiresAt: integer('expires_at'),
+    tokenType: text('token_type'),
     scope: text('scope'),
-    id_token: text('id_token'),
-    session_state: text('session_state'),
+    idToken: text('id_token'),
+    sessionState: text('session_state'),
   },
   (table) => [
     primaryKey({
