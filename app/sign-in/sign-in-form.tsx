@@ -14,13 +14,10 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SignInOutputSchema, SignInSchema } from '@/types/User';
-import { toast } from 'sonner';
-
-import { signIn } from 'next-auth/react';
-import { useRouter } from 'next/navigation';
+import { handleSignIn } from './actions/sign-in-action';
+import { isRedirectError } from '@/lib/redirectError';
 
 export default function SignInForm() {
-  const router = useRouter();
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -31,26 +28,13 @@ export default function SignInForm() {
 
   async function onSubmit(data: SignInOutputSchema) {
     try {
-      const response = await signIn('credentials', {
-        credential: data.credential,
-        password: data.password,
-        redirect: false,
-      });
-
-      if (response.error) {
-        form.setError('credential', {
-          type: 'server',
-          message: 'Invalid username/email or password',
-        });
-        return;
+      const response = await handleSignIn(data);
+      if (!!response?.message) {
+        form.setError('password', { message: response.message, type: 'server' });
+        form.setError('credential', { message: '', type: 'server' });
       }
-      toast.success('Welcome back');
-      router.push('/');
-    } catch {
-      form.setError('root', {
-        type: 'server',
-        message: 'Something went wrong. Please try again',
-      });
+    } catch (error) {
+      if (isRedirectError(error)) return;
     }
   }
 
