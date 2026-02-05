@@ -14,7 +14,7 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SignInOutputSchema, SignInSchema } from '@/types/User';
-import { handleSignIn } from './actions/sign-in-action';
+import { credentialSignIn } from './actions/credentials-sign-in';
 import { isRedirectError } from '@/lib/redirectError';
 
 export default function SignInForm() {
@@ -28,7 +28,7 @@ export default function SignInForm() {
 
   async function onSubmit(data: SignInOutputSchema) {
     try {
-      const response = await handleSignIn(data);
+      const response = await credentialSignIn(data);
       if (!!response?.message) {
         form.setError('password', { message: response.message, type: 'server' });
         form.setError('credential', { message: '', type: 'server' });
