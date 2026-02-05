@@ -35,7 +35,7 @@ export default function RootLayout({
           <Toaster />
         </main>
         <footer className="relative bg-foreground  py-15">
-          <p className="mx-auto w-fit text-center p-1 rounded-[5px] bg-color1">
+          <p className="mx-auto w-fit text-center p-1 rounded-[5px] bg-primary">
             Footer
           </p>
         </footer>
