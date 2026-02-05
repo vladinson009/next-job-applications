@@ -31,7 +31,7 @@ const emailSchema = z
   .toLowerCase()
   .trim();
 
-const usernameSchema = z
+const nameSchema = z
   .string('Invalid username')
   .toLowerCase()
   .min(4, 'Username must be at least 4 characters')
@@ -42,8 +42,7 @@ const credentialSchema = z
   .min(1, 'Username or Email is required')
   .trim()
   .refine(
-    (val) =>
-      emailSchema.safeParse(val).success || usernameSchema.safeParse(val).success,
+    (val) => emailSchema.safeParse(val).success || nameSchema.safeParse(val).success,
     { error: 'Enter a valid email or username' },
   );
 
@@ -55,7 +54,7 @@ export const signInSchema = z.object({
 
 export const signUpSchema = z
   .object({
-    username: usernameSchema,
+    name: nameSchema,
     email: emailSchema,
   })
   .and(passwordMatchSchema);
