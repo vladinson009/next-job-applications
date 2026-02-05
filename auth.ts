@@ -14,7 +14,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: {},
+        password: {},
         credential: {},
       },
       authorize: async (credentials) => {
@@ -49,7 +49,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           id: user.id,
           name: user.username,
           email: user.email,
-          role: user.role,
+          image: user.image,
         };
       },
     }),
@@ -61,16 +61,23 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     strategy: 'jwt',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
+      if (account?.type === 'credentials') {
+      }
+
       if (user) {
         token.id = user.id;
         token.name = user.name;
+        token.email = user.email;
+        token.image = user.image;
       }
       return token;
     },
     async session({ session, token }) {
       session.user.id = token.id as string;
-      session.user.name = token.name as string;
+      session.user.name = token.name;
+      session.user.email = token.email as string;
+      session.user.image = token.image as string;
 
       return session;
     },
