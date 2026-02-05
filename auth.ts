@@ -7,7 +7,7 @@ import { compare } from 'bcrypt';
 import { eq, or } from 'drizzle-orm';
 import { signInSchema } from '@/validations/userValidation';
 import GitHub from 'next-auth/providers/github';
-
+import Google from 'next-auth/providers/google';
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db),
   providers: [
@@ -27,10 +27,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           .select()
           .from(UsersTable)
           .where(
-            or(
-              eq(UsersTable.email, credential),
-              eq(UsersTable.username, credential),
-            ),
+            or(eq(UsersTable.email, credential), eq(UsersTable.name, credential)),
           )
           .limit(1);
         if (!user) return null;
@@ -47,7 +44,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
 
         return {
           id: user.id,
-          name: user.username,
+          name: user.name,
           email: user.email,
           image: user.image,
         };
@@ -56,6 +53,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     GitHub({
       allowDangerousEmailAccountLinking: true,
     }),
+    Google({ allowDangerousEmailAccountLinking: true }),
   ],
   session: {
     strategy: 'jwt',
