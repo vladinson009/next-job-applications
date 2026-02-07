@@ -1,0 +1,65 @@
+'use client';
+import { Button } from '@/components/ui/button';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { boardSchema } from '@/validations/boardValidation';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import z from 'zod';
+import { createNewBoard } from '../actions/createNewBoard';
+import { redirect } from 'next/navigation';
+
+type CreateBoardSchema = z.infer<typeof boardSchema>;
+type CreateBoardSchemaOutput = z.output<typeof boardSchema>;
+
+export default function CreateBoardForm() {
+  const form = useForm<CreateBoardSchema>({
+    resolver: zodResolver(boardSchema),
+    defaultValues: {
+      name: '',
+    },
+  });
+
+  async function onSubmit(data: CreateBoardSchemaOutput) {
+    await createNewBoard(data.name);
+    redirect('/dashboard');
+  }
+
+  return (
+    <Form {...form}>
+      <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
+        <FormField
+          control={form.control}
+          name="name"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel htmlFor="name">Board name</FormLabel>
+              <FormControl>
+                <Input
+                  id="name"
+                  type="text"
+                  disabled={form.formState.isSubmitting}
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <div className="flex flex-col w-fit items-center gap-3 mx-auto">
+          <Button disabled={form.formState.isSubmitting} type="submit">
+            {form.formState.isSubmitting ? 'Thinking...' : 'Create'}
+          </Button>
+        </div>
+      </form>
+    </Form>
+  );
+}
