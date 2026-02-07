@@ -6,7 +6,7 @@ import {
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { BoardsTable } from '../schema';
+import { BoardsTable, UsersTable } from '../schema';
 
 export const ColumnsTable = pgTable(
   'columns',
@@ -16,6 +16,9 @@ export const ColumnsTable = pgTable(
     boardId: uuid('board_id')
       .notNull()
       .references(() => BoardsTable.id, { onDelete: 'cascade' }),
+    userId: uuid('user_id')
+      .notNull()
+      .references(() => UsersTable.id, { onDelete: 'cascade' }),
     position: integer('position').notNull(),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
