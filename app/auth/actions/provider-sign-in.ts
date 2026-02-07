@@ -2,8 +2,7 @@
 
 import { signIn } from '@/auth';
 import { isRedirectError } from '@/lib/redirectError';
-
-export type Providers = 'google' | 'github' | 'bankid-no';
+import { Providers } from '@/types/Providers';
 
 export async function providerSignIn(provider: Providers) {
   try {

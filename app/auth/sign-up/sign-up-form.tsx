@@ -14,8 +14,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SignUpOutputSchema, SignUpSchema } from '@/types/User';
-import { createUser } from './actions/create-user';
+import { createUser } from '../actions/create-user';
 import { toast } from 'sonner';
+import { isRedirectError } from '@/lib/redirectError';
 
 export default function SignUpForm() {
   const form = useForm<SignUpSchema>({
@@ -45,6 +46,7 @@ export default function SignUpForm() {
         return;
       }
     } catch (error) {
+      if (isRedirectError(error)) return;
       console.log('SignUpForm', error);
     }
   }

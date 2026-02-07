@@ -14,10 +14,19 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SignInOutputSchema, SignInSchema } from '@/types/User';
-import { credentialSignIn } from './actions/credentials-sign-in';
 import { isRedirectError } from '@/lib/redirectError';
+import { credentialSignIn } from '../actions/credentials-sign-in';
+import { useState } from 'react';
+import { sendEmail } from '@/lib/sendEmail';
+import { VerifyEmailTemplate } from '@/components/verify-email-template';
+import { generateVerificationToken } from '@/lib/generateVerificationToken';
+import { toast } from 'sonner';
+import { email } from 'zod';
+import { resendEmailHelper } from './helpers/resendEmail';
 
 export default function SignInForm() {
+  const [isVerified, setIsVerified] = useState<boolean>(true);
+  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -29,12 +38,35 @@ export default function SignInForm() {
   async function onSubmit(data: SignInOutputSchema) {
     try {
       const response = await credentialSignIn(data);
+
       if (!!response?.message) {
         form.setError('password', { message: response.message, type: 'server' });
         form.setError('credential', { message: '', type: 'server' });
       }
+      if (response?.reason === 'emailVerified' && response.user) {
+        setIsVerified(false);
+        setUser(response.user);
+      }
     } catch (error) {
       if (isRedirectError(error)) return;
+    }
+  }
+  async function verifyEmail() {
+    if (user?.email && user.name) {
+      // Create verification token and push in DB
+      try {
+        const token = await generateVerificationToken(user.email);
+        const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify?token=${token}`;
+        await resendEmailHelper({ email: user.email, name: user.name, verifyUrl });
+        setIsVerified(true);
+        toast.success('Email sent successfully');
+        form.clearErrors();
+      } catch {
+        form.setError('password', {
+          message: 'Something went wrong',
+          type: 'server',
+        });
+      }
     }
   }
 
@@ -78,10 +110,21 @@ export default function SignInForm() {
             </FormItem>
           )}
         />
-
-        <Button disabled={form.formState.isSubmitting} type="submit">
-          {form.formState.isSubmitting ? 'Thinking...' : 'Sign in'}
-        </Button>
+        <div className="flex flex-col w-fit items-center gap-3 mx-auto">
+          <Button disabled={form.formState.isSubmitting} type="submit">
+            {form.formState.isSubmitting ? 'Thinking...' : 'Sign in'}
+          </Button>
+          {!isVerified && (
+            <Button
+              onClick={verifyEmail}
+              variant="secondary"
+              type="button"
+              className="hover:scale-110"
+            >
+              Resend verification email
+            </Button>
+          )}
+        </div>
       </form>
     </Form>
   );
