@@ -1,4 +1,4 @@
-import NextAuth from 'next-auth';
+import NextAuth, { AuthError } from 'next-auth';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import { DrizzleAdapter } from '@auth/drizzle-adapter';
 import { db } from './db';
@@ -33,15 +33,15 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         if (!user) return null;
         const isVerified = user.emailVerified;
         // Check with AuthError for custom error messages
-        // if (!isVerified) {
-        //   return null;
-        // }
 
         if (!user.password) return null;
 
         const isValid = await compare(password, user.password);
         if (!isValid) return null;
 
+        if (!isVerified && isValid) {
+          throw new AuthError('EMAIL_NOT_VERIFIED');
+        }
         return {
           id: user.id,
           name: user.name,
