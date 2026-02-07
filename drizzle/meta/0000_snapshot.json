@@ -1,5 +1,5 @@
 {
-  "id": "bcdad0da-2a99-4602-b9b6-231d1d9ce393",
+  "id": "1fd2bef9-a802-45a0-a048-868db9c69a33",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -363,7 +363,23 @@
           "notNull": true
         }
       },
-      "indexes": {},
+      "indexes": {
+        "verification_tokens_identifier_unique": {
+          "name": "verification_tokens_identifier_unique",
+          "columns": [
+            {
+              "expression": "identifier",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
       "foreignKeys": {},
       "compositePrimaryKeys": {
         "verification_tokens_identifier_token_pk": {

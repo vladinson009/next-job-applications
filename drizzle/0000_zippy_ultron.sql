@@ -73,4 +73,5 @@ ALTER TABLE "account" ADD CONSTRAINT "account_userId_user_id_fk" FOREIGN KEY ("u
 ALTER TABLE "jobs" ADD CONSTRAINT "jobs_column_id_columns_id_fk" FOREIGN KEY ("column_id") REFERENCES "public"."columns"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "jobs" ADD CONSTRAINT "jobs_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "columns_board_idx" ON "columns" USING btree ("board_id");--> statement-breakpoint
+CREATE UNIQUE INDEX "verification_tokens_identifier_unique" ON "verification_tokens" USING btree ("identifier");--> statement-breakpoint
 CREATE INDEX "jobs_column_idx" ON "jobs" USING btree ("column_id");
