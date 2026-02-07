@@ -1,11 +1,9 @@
 'use client';
 import { isRedirectError } from '@/lib/redirectError';
-import { Button } from '../ui/button';
 import { logoutAction } from './actions/logout-action';
 import { toast } from 'sonner';
 import {
   DropdownMenu,
-  DropdownMenuCheckboxItem,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
@@ -14,6 +12,8 @@ import {
 } from '../ui/dropdown-menu';
 import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from '../ui/avatar';
 import { User } from 'next-auth';
+import { Button } from '../ui/button';
+import Link from 'next/link';
 
 type Props = {
   user: User;
@@ -39,11 +39,14 @@ export default function AvatarMenu({ user }: Props) {
         </Avatar>
       </DropdownMenuTrigger>
       <DropdownMenuContent>
-        {/* <DropdownMenuGroup>
-          <DropdownMenuItem>Profile</DropdownMenuItem>
-          <DropdownMenuItem>Settings</DropdownMenuItem>
-          <DropdownMenuItem>Home</DropdownMenuItem>
-        </DropdownMenuGroup> */}
+        <DropdownMenuGroup>
+          <DropdownMenuItem asChild>
+            <Link href="/">Home</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/dashboard">Dashboard</Link>
+          </DropdownMenuItem>
+        </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
           <DropdownMenuItem onClick={onLogout} variant="destructive">
