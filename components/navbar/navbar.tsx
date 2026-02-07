@@ -23,18 +23,18 @@ export default async function Navbar() {
             <>
               <li>
                 <Button variant="default" asChild>
-                  <Link href="sign-in">Sign In</Link>
+                  <Link href="/auth/sign-in">Sign In</Link>
                 </Button>
               </li>
-              <li>
+              {/* <li>
                 <Button
                   className="hover:bg-color2 hover:text-color3"
                   variant="outline"
                   asChild
                 >
-                  <Link href="sign-up">Sign Up</Link>
+                  <Link href="/auth/sign-up">Sign Up</Link>
                 </Button>
-              </li>
+              </li> */}
             </>
           )}
           {!!isAuth && (
