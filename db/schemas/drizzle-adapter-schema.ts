@@ -5,6 +5,7 @@ import {
   primaryKey,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
@@ -60,5 +61,8 @@ export const VerificationTokens = pgTable(
     token: text('token').notNull(),
     expires: timestamp('expires', { mode: 'date' }).notNull(),
   },
-  (table) => [primaryKey({ columns: [table.identifier, table.token] })],
+  (table) => [
+    primaryKey({ columns: [table.identifier, table.token] }),
+    uniqueIndex('verification_tokens_identifier_unique').on(table.identifier),
+  ],
 );
