@@ -7,7 +7,7 @@ import {
   uuid,
   varchar,
 } from 'drizzle-orm/pg-core';
-import { ColumnsTable, UsersTable } from '../schema';
+import { BoardsTable, ColumnsTable, UsersTable } from '../schema';
 
 export const JobsTable = pgTable(
   'jobs',
@@ -25,6 +25,9 @@ export const JobsTable = pgTable(
     userId: uuid('user_id')
       .notNull()
       .references(() => UsersTable.id, { onDelete: 'cascade' }),
+    boardId: uuid('board_id')
+      .notNull()
+      .references(() => BoardsTable.id, { onDelete: 'cascade' }),
     createdAt: timestamp('created_at').defaultNow().notNull(),
     updatedAt: timestamp('updated_at').defaultNow().notNull(),
   },
