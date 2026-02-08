@@ -18,6 +18,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import DeleteBoardButton from './delete-board-button';
 import EditBoardButton from './edit-board-button';
+import CreateBoardButton from './create-board-button';
 
 export default async function DashboardPage() {
   const boards = await fetchBoards();
@@ -25,9 +26,7 @@ export default async function DashboardPage() {
   return (
     <section>
       <Container className="my-5 xl:my-15 space-y-5">
-        <Button asChild>
-          <Link href="/dashboard/create-board">Create new board</Link>
-        </Button>
+        <CreateBoardButton />
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {boards.map((board) => (
             <Card key={board.id} className="">

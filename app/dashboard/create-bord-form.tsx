@@ -13,8 +13,9 @@ import { boardSchema } from '@/validations/boardValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
-import { createNewBoard } from '../actions/createNewBoard';
+import { createNewBoard } from './actions/createNewBoard';
 import { redirect } from 'next/navigation';
+import { DialogClose } from '@/components/ui/dialog';
 
 type CreateBoardSchema = z.infer<typeof boardSchema>;
 type CreateBoardSchemaOutput = z.output<typeof boardSchema>;
@@ -54,10 +55,15 @@ export default function CreateBoardForm() {
           )}
         />
 
-        <div className="flex flex-col w-fit items-center gap-3 mx-auto">
-          <Button disabled={form.formState.isSubmitting} type="submit">
-            {form.formState.isSubmitting ? 'Thinking...' : 'Create'}
-          </Button>
+        <div className="flex  w-fit items-center gap-3 mx-auto">
+          <DialogClose asChild>
+            <Button variant="outline">Cancel</Button>
+          </DialogClose>
+          <DialogClose asChild>
+            <Button disabled={form.formState.isSubmitting} type="submit">
+              {form.formState.isSubmitting ? 'Thinking...' : 'Create'}
+            </Button>
+          </DialogClose>
         </div>
       </form>
     </Form>

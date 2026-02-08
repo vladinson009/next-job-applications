@@ -27,10 +27,12 @@ export default function JobCard({ job }: Props) {
           <Badge className="bg-green-500">Location</Badge>
           <span> {job.location}</span>
         </p>
-        <p className="flex justify-between">
-          <Badge className="bg-green-500">Salary</Badge>
-          <span> {job.salary}</span>
-        </p>
+        {job.salary && (
+          <p className="flex justify-between">
+            <Badge className="bg-green-500">Salary</Badge>
+            <span> {job.salary}</span>
+          </p>
+        )}
         {job.remote && (
           <p className="flex justify-between">
             <Badge className="bg-green-500">Remote</Badge>
