@@ -1,6 +1,6 @@
 {
-  "id": "3053fc52-d83d-456d-8907-3830fb711865",
-  "prevId": "00000000-0000-0000-0000-000000000000",
+  "id": "11f6684c-6167-4e60-b9d7-f808db0e92e4",
+  "prevId": "3053fc52-d83d-456d-8907-3830fb711865",
   "version": "7",
   "dialect": "postgresql",
   "tables": {
@@ -474,6 +474,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "board_id": {
+          "name": "board_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -526,6 +532,19 @@
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "jobs_board_id_boards_id_fk": {
+          "name": "jobs_board_id_boards_id_fk",
+          "tableFrom": "jobs",
+          "tableTo": "boards",
+          "columnsFrom": [
+            "board_id"
           ],
           "columnsTo": [
             "id"
