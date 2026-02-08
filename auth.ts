@@ -39,9 +39,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const isValid = await compare(password, user.password);
         if (!isValid) return null;
         //TODO: Need to verify email
-        // if (!isVerified && isValid) {
-        //   throw new AuthError('EMAIL_NOT_VERIFIED');
-        // }
+        if (!isVerified && isValid) {
+          throw new AuthError('EMAIL_NOT_VERIFIED');
+        }
         return {
           id: user.id,
           name: user.name,

@@ -46,7 +46,10 @@ export default function SignUpForm() {
         return;
       }
     } catch (error) {
-      if (isRedirectError(error)) return;
+      if (isRedirectError(error)) {
+        toast.success('Email verification was sent to you');
+        return;
+      }
       console.log('SignUpForm', error);
     }
   }

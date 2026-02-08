@@ -13,9 +13,12 @@ export async function validateToken(token: string) {
       })
       .from(VerificationTokens)
       .where(
-        (and(eq(VerificationTokens.token, token)),
-        gt(VerificationTokens.expires, newDate)),
+        and(
+          eq(VerificationTokens.token, token),
+          gt(VerificationTokens.expires, newDate),
+        ),
       );
+
     if (!tokenRow) {
       return { success: false, message: 'Invalid or expired token' };
     }

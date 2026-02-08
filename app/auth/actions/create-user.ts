@@ -11,7 +11,6 @@ import { eq, or } from 'drizzle-orm';
 import { $ZodIssue } from 'zod/v4/core';
 import { generateVerificationToken } from '@/lib/generateVerificationToken';
 import { sendEmail } from '@/lib/sendEmail';
-import { VerifyEmailTemplate } from '@/components/verify-email-template';
 import { redirect } from 'next/navigation';
 import { isRedirectError } from '@/lib/redirectError';
 
@@ -94,19 +93,15 @@ export async function createUser(
     await sendEmail({
       to: email,
       subject: 'Verify your email',
-      react: VerifyEmailTemplate({
-        name,
-        verifyUrl,
-      }),
+      html: `<div>
+                <h1>Welcome to Job Applications, ${user.name}</h1>
+                <p>Here is your verifying link</p>
+                <a href="${verifyUrl}">Click here</a>
+                <p>This link is valid for 24 hours.</p>
+            </div>`,
     });
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password: _, ...returnValue } = user;
     redirect('/');
-    // return {
-    //   success: true,
-    //   user: returnValue,
-    // };
   } catch (err) {
     if (isRedirectError(err)) throw err;
     //Internal server error

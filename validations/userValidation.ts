@@ -40,6 +40,7 @@ const nameSchema = z
 const credentialSchema = z
   .string()
   .min(1, 'Username or Email is required')
+  .toLowerCase()
   .trim()
   .refine(
     (val) => emailSchema.safeParse(val).success || nameSchema.safeParse(val).success,

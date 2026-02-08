@@ -21,7 +21,12 @@ export async function POST(req: NextRequest) {
     const emailData = await sendEmail({
       to: email,
       subject: 'Verify your email',
-      react: VerifyEmailTemplate({ name, verifyUrl }),
+      html: `<div>
+                <h1>Welcome to Job Applications, ${name}</h1>
+                <p>Here is your verifying link</p>
+                <a href="${verifyUrl}">Click here</a>
+                <p>This link is valid for 24 hours.</p>
+            </div>`,
     });
 
     return Response.json(emailData);
