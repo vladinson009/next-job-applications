@@ -39,7 +39,9 @@ export default function CreateColumnButton({ boardId }: { boardId: string }) {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button type="button">Create column</Button>
+        <Button className="" type="button">
+          Create column
+        </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
