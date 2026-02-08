@@ -30,6 +30,7 @@ import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
 import { createNewJob } from '../actions/createNewJob';
+import { useEffect, useState } from 'react';
 
 type Props = {
   column: ColumnFromDB;
@@ -37,6 +38,7 @@ type Props = {
 };
 
 export default function CreateJobButton({ column, boardId }: Props) {
+  const [open, setOpen] = useState(false);
   const form = useForm<z.infer<typeof jobSchema>>({
     resolver: zodResolver(jobSchema),
     defaultValues: {
@@ -47,11 +49,23 @@ export default function CreateJobButton({ column, boardId }: Props) {
       remote: 'false',
     },
   });
+
+  useEffect(() => {
+    if (!open) {
+      form.clearErrors();
+    }
+  }, [open, form]);
+
   async function onCreate(data: z.output<typeof jobSchema>) {
-    await createNewJob(data, column.id, boardId);
+    const result = await createNewJob(data, column.id, boardId);
+    if (!result.success) {
+      return;
+    }
+    form.reset();
+    setOpen(false);
   }
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger>
         <PlusIcon className="text-primary" />
       </DialogTrigger>
@@ -71,7 +85,9 @@ export default function CreateJobButton({ column, boardId }: Props) {
               name="companyName"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="company-name">Company name</FormLabel>
+                  <FormLabel htmlFor="company-name">
+                    Company name<span className="text-destructive">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       id="company-name"
@@ -89,7 +105,9 @@ export default function CreateJobButton({ column, boardId }: Props) {
               name="title"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="title">Job title</FormLabel>
+                  <FormLabel htmlFor="title">
+                    Job title<span className="text-destructive">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       id="title"
@@ -107,7 +125,9 @@ export default function CreateJobButton({ column, boardId }: Props) {
               name="location"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel htmlFor="location">Location</FormLabel>
+                  <FormLabel htmlFor="location">
+                    Location<span className="text-destructive">*</span>
+                  </FormLabel>
                   <FormControl>
                     <Input
                       id="location"
@@ -174,11 +194,10 @@ export default function CreateJobButton({ column, boardId }: Props) {
                   Close
                 </Button>
               </DialogClose>
-              <DialogClose asChild>
-                <Button disabled={form.formState.isSubmitting} type="submit">
-                  {form.formState.isSubmitting ? 'Thinking...' : 'Create'}
-                </Button>
-              </DialogClose>
+
+              <Button disabled={form.formState.isSubmitting} type="submit">
+                {form.formState.isSubmitting ? 'Thinking...' : 'Create'}
+              </Button>
             </DialogFooter>
           </form>
         </Form>

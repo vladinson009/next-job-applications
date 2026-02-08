@@ -33,7 +33,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
               <BreadcrumbItem>
                 {
                   <BreadcrumbLink className="capitalize" href={crumb.href}>
-                    <Badge className="text-base">{crumb.label}</Badge>
+                    <Badge className="text-base">Back to {crumb.label}</Badge>
                   </BreadcrumbLink>
                 }
               </BreadcrumbItem>

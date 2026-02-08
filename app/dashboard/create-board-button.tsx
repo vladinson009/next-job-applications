@@ -1,5 +1,3 @@
-import Container from '@/components/container';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import CreateBoardForm from './create-bord-form';
 import {
   Dialog,
@@ -15,7 +13,7 @@ export default function CreateBoardButton() {
   return (
     <Dialog>
       <DialogTrigger asChild>
-        <Button>Create board</Button>
+        <Button>Create Board</Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

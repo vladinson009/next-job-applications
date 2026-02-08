@@ -1,6 +1,5 @@
 import Container from '@/components/container';
 import { fetchColumnsByBoardId } from '../actions/fetchColumnsByBoardId';
-import { Button } from '@/components/ui/button';
 import {
   Card,
   CardAction,
@@ -10,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { MoreVerticalIcon, PlusIcon } from 'lucide-react';
+import { MoreVerticalIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
@@ -18,7 +17,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import DeleteColumnButton from './delete-column-button';
-import Link from 'next/link';
 import CreateColumnButton from './create-column-button';
 import CreateJobButton from './create-job-button';
 import { fetchJobsByBoardId } from '../actions/fetchJobsByBoardId';
@@ -49,10 +47,10 @@ export default async function BoardPage({ params }: Props) {
 
   return (
     <section className="grow">
-      <Container className="py-5 xl:py-15 h-screen">
+      <Container className="pb-5">
         <CreateColumnButton boardId={boardId} />
         <h2>{columns && columns[0].boardName}</h2>
-        <div className="flex gap-3 overflow-auto w-full h-4/5">
+        <div className="flex gap-3 overflow-auto w-full h-[70vh]">
           {columns?.length &&
             columns?.map((column) => (
               <Card

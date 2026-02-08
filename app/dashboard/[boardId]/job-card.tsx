@@ -2,6 +2,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import {
   Card,
+  CardAction,
   CardContent,
   CardDescription,
   CardFooter,
@@ -9,7 +10,14 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { JobFromDB } from '@/types/Job';
+import { MoreVerticalIcon, XCircleIcon, XIcon } from 'lucide-react';
 import Link from 'next/link';
+import DeleteJobButton from './delete-job-button';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 
 type Props = {
   job: JobFromDB;
@@ -21,6 +29,16 @@ export default function JobCard({ job }: Props) {
       <CardHeader>
         <CardTitle>{job.companyName}</CardTitle>
         <CardDescription>{job.title}</CardDescription>
+        <CardAction>
+          <DropdownMenu>
+            <DropdownMenuTrigger>
+              <MoreVerticalIcon className="text-primary" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DeleteJobButton job={job} />
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </CardAction>
       </CardHeader>
       <CardContent className="flex flex-col gap-2">
         <p className="flex justify-between">
