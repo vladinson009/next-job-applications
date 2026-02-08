@@ -20,6 +20,9 @@ import {
 import DeleteColumnButton from './delete-column-button';
 import Link from 'next/link';
 import CreateColumnButton from './create-column-button';
+import CreateJobButton from './create-job-button';
+import { fetchJobsByBoardId } from '../actions/fetchJobsByBoardId';
+import JobCard from './job-card';
 
 type Props = {
   params: {
@@ -31,57 +34,60 @@ export default async function BoardPage({ params }: Props) {
   const urlParams = await params;
   const boardId = urlParams.boardId;
 
-  const columns = await fetchColumnsByBoardId(boardId);
+  const columnsPromise = fetchColumnsByBoardId(boardId);
+  const jobsPromise = fetchJobsByBoardId(boardId);
+  const [columns, jobs] = await Promise.all([columnsPromise, jobsPromise]);
+
+  const sortedJobs =
+    jobs?.reduce<Record<string, typeof jobs>>((acc, current) => {
+      if (!acc[current.columnId]) {
+        acc[current.columnId] = [];
+      }
+      acc[current.columnId].push(current);
+      return acc;
+    }, {}) || {};
 
   return (
-    <section className="flex grow">
-      <Container className="py-5 xl:py-15 min-h-full ">
+    <section className="grow">
+      <Container className="py-5 xl:py-15 h-screen">
         <CreateColumnButton boardId={boardId} />
-        <h2>Board {columns && columns[0].boardName}</h2>
-        <div className="flex gap-3 overflow-auto min-h-full">
+        <h2>{columns && columns[0].boardName}</h2>
+        <div className="flex gap-3 overflow-auto w-full h-4/5">
           {columns?.length &&
             columns?.map((column) => (
               <Card
-                className="min-w-1/3  shrink-0 even:bg-secondary"
+                className="bg-foreground shrink-0 w-1/3 min-w-55 even:bg-muted-foreground"
                 key={column.id}
               >
                 <CardHeader>
                   <CardTitle>
-                    <Badge>{column.name}</Badge>
+                    <Badge className="bg-secondary text-foreground">
+                      {column.name}
+                    </Badge>
                   </CardTitle>
-                  <CardDescription>
-                    {column.updatedAt.toLocaleDateString()}
+                  <CardDescription className="text-background">
+                    Last update: {column.updatedAt.toLocaleDateString()}
                   </CardDescription>
                   <CardAction>
                     <DropdownMenu>
                       <DropdownMenuTrigger>
-                        <MoreVerticalIcon />
+                        <MoreVerticalIcon className="text-primary" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
                         <DeleteColumnButton column={column} />
-                        {/* Content */}
-                        {/* <DeleteBoardButton board={board} />
-                        <EditBoardButton board={board} /> */}
-                        {/* Content */}
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </CardAction>
                 </CardHeader>
-                <CardContent></CardContent>
+                <CardContent className="space-y-2 overflow-auto">
+                  {sortedJobs[column.id]?.map((job) => (
+                    <JobCard key={job.id} job={job} />
+                  ))}
+                </CardContent>
                 <CardFooter className="flex justify-between mt-auto">
-                  <p>
-                    Last update: {column.updatedAt.toLocaleDateString()} at{' '}
-                    {column.updatedAt.toLocaleTimeString()}
-                  </p>
-                  <PlusIcon />
+                  <p></p>
+                  <CreateJobButton column={column} boardId={boardId} />
                 </CardFooter>
-                {/* <p>Board ID: {column.boardId}</p>
-                <p>Created At:{column.createdAt.toLocaleDateString()}</p>
-                <p>ID: {column.id}</p>
-                <p>Name: {column.name}</p>
-                <p>Positioin: {column.position}</p>
-                <p>Updated At: {column.updatedAt.toLocaleDateString()}</p>
-                <p>BoardName: {column.boardName}</p> */}
               </Card>
             ))}
         </div>
