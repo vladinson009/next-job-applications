@@ -5,7 +5,6 @@ import {
   BreadcrumbItem,
   BreadcrumbLink,
   BreadcrumbList,
-  BreadcrumbPage,
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { usePathname } from 'next/navigation';
@@ -23,7 +22,6 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
       isLast: index === segments.length - 1,
     };
   });
-  console.log(breadcrumbs);
   return (
     <>
       <Breadcrumb className="flex justify-center pt-5">

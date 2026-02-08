@@ -14,13 +14,16 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { createNewBoard } from './actions/createNewBoard';
-import { redirect } from 'next/navigation';
 import { DialogClose } from '@/components/ui/dialog';
 
 type CreateBoardSchema = z.infer<typeof boardSchema>;
 type CreateBoardSchemaOutput = z.output<typeof boardSchema>;
 
-export default function CreateBoardForm() {
+type Props = {
+  isOpen: (isOpen: boolean) => void;
+};
+
+export default function CreateBoardForm({ isOpen }: Props) {
   const form = useForm<CreateBoardSchema>({
     resolver: zodResolver(boardSchema),
     defaultValues: {
@@ -29,8 +32,14 @@ export default function CreateBoardForm() {
   });
 
   async function onSubmit(data: CreateBoardSchemaOutput) {
-    await createNewBoard(data.name);
-    redirect('/dashboard');
+    try {
+      const response = await createNewBoard(data.name);
+      if (!response.success) {
+        return;
+      }
+      isOpen(false);
+      form.reset();
+    } catch {}
   }
 
   return (
@@ -59,11 +68,10 @@ export default function CreateBoardForm() {
           <DialogClose asChild>
             <Button variant="outline">Cancel</Button>
           </DialogClose>
-          <DialogClose asChild>
-            <Button disabled={form.formState.isSubmitting} type="submit">
-              {form.formState.isSubmitting ? 'Thinking...' : 'Create'}
-            </Button>
-          </DialogClose>
+
+          <Button disabled={form.formState.isSubmitting} type="submit">
+            {form.formState.isSubmitting ? 'Thinking...' : 'Create'}
+          </Button>
         </div>
       </form>
     </Form>

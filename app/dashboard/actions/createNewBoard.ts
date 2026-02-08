@@ -5,6 +5,7 @@ import { db } from '@/db';
 import { BoardsTable, ColumnsTable } from '@/db/schema';
 import { boardSchema } from '@/validations/boardValidation';
 import { eq } from 'drizzle-orm';
+import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 
 export async function createNewBoard(name: string) {
@@ -62,6 +63,7 @@ export async function createNewBoard(name: string) {
       },
     ])
     .returning();
+  revalidatePath('/dashboard');
 
   return { success: true, board: newBoard, columns };
 }

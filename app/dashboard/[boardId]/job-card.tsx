@@ -10,7 +10,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { JobFromDB } from '@/types/Job';
-import { MoreVerticalIcon, XCircleIcon, XIcon } from 'lucide-react';
+import { MoreVerticalIcon } from 'lucide-react';
 import Link from 'next/link';
 import DeleteJobButton from './delete-job-button';
 import {

@@ -25,8 +25,10 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 import { createNewColumn } from '../actions/createNewColumn';
+import { useState } from 'react';
 
 export default function CreateColumnButton({ boardId }: { boardId: string }) {
+  const [open, setOpen] = useState(false);
   const form = useForm<z.infer<typeof columnSchema>>({
     resolver: zodResolver(columnSchema),
     defaultValues: {
@@ -34,10 +36,17 @@ export default function CreateColumnButton({ boardId }: { boardId: string }) {
     },
   });
   async function onCreate(data: z.output<typeof columnSchema>) {
-    await createNewColumn(data.name, boardId);
+    try {
+      const response = await createNewColumn(data.name, boardId);
+      if (!response.success) {
+        return;
+      }
+      setOpen(false);
+      form.reset();
+    } catch {}
   }
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button className="" type="button">
           Create column
@@ -76,11 +85,9 @@ export default function CreateColumnButton({ boardId }: { boardId: string }) {
                   Close
                 </Button>
               </DialogClose>
-              <DialogClose asChild>
-                <Button disabled={form.formState.isSubmitting} type="submit">
-                  {form.formState.isSubmitting ? 'Thinking...' : 'Create'}
-                </Button>
-              </DialogClose>
+              <Button disabled={form.formState.isSubmitting} type="submit">
+                {form.formState.isSubmitting ? 'Thinking...' : 'Create'}
+              </Button>
             </DialogFooter>
           </form>
         </Form>
