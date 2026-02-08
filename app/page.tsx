@@ -2,7 +2,7 @@ import Container from '@/components/container';
 
 export default function Home() {
   return (
-    <section className="bg-secondary">
+    <section className="">
       <Container className="">asd</Container>
     </section>
   );

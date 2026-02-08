@@ -16,14 +16,28 @@ import DeleteJobButton from './delete-job-button';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import MoveJobButton from './move-job-button';
+import MoveJobInColumnButton from './move-job-in-column-button';
 
 type Props = {
   job: JobFromDB;
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+  canMoveLeft: boolean;
+  canMoveRight: boolean;
 };
 
-export default function JobCard({ job }: Props) {
+export default function JobCard({
+  job,
+  canMoveUp,
+  canMoveDown,
+  canMoveLeft,
+  canMoveRight,
+}: Props) {
   return (
     <Card className="">
       <CardHeader>
@@ -35,6 +49,39 @@ export default function JobCard({ job }: Props) {
               <MoreVerticalIcon className="text-primary" />
             </DropdownMenuTrigger>
             <DropdownMenuContent>
+              <DropdownMenuGroup>
+                {canMoveUp && (
+                  <MoveJobButton
+                    columnId={job.columnId}
+                    jobId={job.id}
+                    direction="up"
+                  />
+                )}
+                {canMoveDown && (
+                  <MoveJobButton
+                    columnId={job.columnId}
+                    jobId={job.id}
+                    direction="down"
+                  />
+                )}
+                {(canMoveDown || canMoveUp) && <DropdownMenuSeparator />}
+
+                {canMoveLeft && (
+                  <MoveJobInColumnButton
+                    columnId={job.columnId}
+                    direction="left"
+                    jobId={job.id}
+                  />
+                )}
+                {canMoveRight && (
+                  <MoveJobInColumnButton
+                    columnId={job.columnId}
+                    direction="right"
+                    jobId={job.id}
+                  />
+                )}
+              </DropdownMenuGroup>
+              {(canMoveLeft || canMoveRight) && <DropdownMenuSeparator />}
               <DeleteJobButton job={job} />
             </DropdownMenuContent>
           </DropdownMenu>

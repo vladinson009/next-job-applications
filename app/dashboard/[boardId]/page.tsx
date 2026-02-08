@@ -14,6 +14,9 @@ import { Badge } from '@/components/ui/badge';
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import DeleteColumnButton from './delete-column-button';
@@ -21,6 +24,7 @@ import CreateColumnButton from './create-column-button';
 import CreateJobButton from './create-job-button';
 import { fetchJobsByBoardId } from '../actions/fetchJobsByBoardId';
 import JobCard from './job-card';
+import MoveColumnButton from './move-column-button';
 
 type Props = {
   params: {
@@ -34,7 +38,8 @@ export default async function BoardPage({ params }: Props) {
 
   const columnsPromise = fetchColumnsByBoardId(boardId);
   const jobsPromise = fetchJobsByBoardId(boardId);
-  const [columns, jobs] = await Promise.all([columnsPromise, jobsPromise]);
+  const [columns, jobsFromServer] = await Promise.all([columnsPromise, jobsPromise]);
+  const jobs = jobsFromServer ?? [];
 
   const sortedJobs =
     jobs?.reduce<Record<string, typeof jobs>>((acc, current) => {
@@ -52,7 +57,7 @@ export default async function BoardPage({ params }: Props) {
         <h2>{columns && columns[0].boardName}</h2>
         <div className="flex gap-3 overflow-auto w-full h-[70vh]">
           {columns?.length &&
-            columns?.map((column) => (
+            columns?.map((column, colIndex) => (
               <Card
                 className="bg-foreground shrink-0 w-1/3 min-w-55 even:bg-muted-foreground"
                 key={column.id}
@@ -72,14 +77,40 @@ export default async function BoardPage({ params }: Props) {
                         <MoreVerticalIcon className="text-primary" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent>
-                        <DeleteColumnButton column={column} />
+                        <DropdownMenuGroup>
+                          {column.position !== 1 && (
+                            <MoveColumnButton
+                              boardId={column.boardId}
+                              columnId={column.id}
+                              direction="left"
+                            />
+                          )}
+                          {columns.length - 1 !== colIndex && (
+                            <MoveColumnButton
+                              boardId={column.boardId}
+                              columnId={column.id}
+                              direction="right"
+                            />
+                          )}
+                        </DropdownMenuGroup>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuGroup>
+                          <DeleteColumnButton column={column} />
+                        </DropdownMenuGroup>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </CardAction>
                 </CardHeader>
                 <CardContent className="space-y-2 overflow-auto">
-                  {sortedJobs[column.id]?.map((job) => (
-                    <JobCard key={job.id} job={job} />
+                  {sortedJobs[column.id]?.map((job, index) => (
+                    <JobCard
+                      key={job.id}
+                      job={job}
+                      canMoveUp={index > 0}
+                      canMoveDown={index < sortedJobs[column.id].length - 1}
+                      canMoveLeft={colIndex > 0}
+                      canMoveRight={colIndex < columns.length - 1}
+                    />
                   ))}
                 </CardContent>
                 <CardFooter className="flex justify-between mt-auto">
