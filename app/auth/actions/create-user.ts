@@ -13,6 +13,7 @@ import { generateVerificationToken } from '@/lib/generateVerificationToken';
 import { sendEmail } from '@/lib/sendEmail';
 import { redirect } from 'next/navigation';
 import { isRedirectError } from '@/lib/redirectError';
+import { emailText } from '@/constants/emailVerification';
 
 export async function createUser(
   userInput: SignUpOutputSchema,
@@ -93,12 +94,7 @@ export async function createUser(
     await sendEmail({
       to: email,
       subject: 'Verify your email',
-      html: `<div>
-                <h1>Welcome to Job Applications, ${user.name}</h1>
-                <p>Here is your verifying link</p>
-                <a href="${verifyUrl}">Click here</a>
-                <p>This link is valid for 24 hours.</p>
-            </div>`,
+      html: emailText(verifyUrl, user.name),
     });
 
     redirect('/');

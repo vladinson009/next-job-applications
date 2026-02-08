@@ -17,11 +17,8 @@ import { SignInOutputSchema, SignInSchema } from '@/types/User';
 import { isRedirectError } from '@/lib/redirectError';
 import { credentialSignIn } from '../actions/credentials-sign-in';
 import { useState } from 'react';
-import { sendEmail } from '@/lib/sendEmail';
-import { VerifyEmailTemplate } from '@/components/verify-email-template';
 import { generateVerificationToken } from '@/lib/generateVerificationToken';
 import { toast } from 'sonner';
-import { email } from 'zod';
 import { resendEmailHelper } from './helpers/resendEmail';
 
 export default function SignInForm() {

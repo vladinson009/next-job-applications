@@ -9,7 +9,6 @@ import {
 import Link from 'next/link';
 import SignInForm from './sign-in-form';
 import AuthProvidersCardHeader from '@/components/auth-form/auth-providers-card-header';
-// import SignUpForm from './sign-up-form';
 
 export default function SignInPage() {
   return (

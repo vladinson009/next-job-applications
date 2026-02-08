@@ -1,4 +1,5 @@
 import { VerifyEmailTemplate } from '@/components/verify-email-template';
+import { emailText } from '@/constants/emailVerification';
 import { sendEmail } from '@/lib/sendEmail';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -21,12 +22,7 @@ export async function POST(req: NextRequest) {
     const emailData = await sendEmail({
       to: email,
       subject: 'Verify your email',
-      html: `<div>
-                <h1>Welcome to Job Applications, ${name}</h1>
-                <p>Here is your verifying link</p>
-                <a href="${verifyUrl}">Click here</a>
-                <p>This link is valid for 24 hours.</p>
-            </div>`,
+      html: emailText(verifyUrl, name),
     });
 
     return Response.json(emailData);
