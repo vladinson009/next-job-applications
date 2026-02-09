@@ -1,7 +1,7 @@
 'use server';
 import { auth } from '@/auth';
 import { db } from '@/db';
-import { ColumnsTable, JobsTable } from '@/db/schema';
+import { JobsTable } from '@/db/schema';
 import { and, eq } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';

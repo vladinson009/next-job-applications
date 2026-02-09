@@ -5,7 +5,6 @@ import Navbar from '@/components/layout/navbar/navbar';
 import { Toaster } from 'sonner';
 import Footer from '@/components/layout/footer';
 import { AuthProvider } from '@/components/auth-context-provider';
-import { auth } from '@/auth';
 import { requestUser } from '@/lib/auth-server';
 
 const geistSans = Geist({

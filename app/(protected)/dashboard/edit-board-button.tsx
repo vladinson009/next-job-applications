@@ -1,6 +1,5 @@
 'use client';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { deleteBoardById } from '../../../features/dashboard/actions/deleteBoardById';
 import {
   Dialog,
   DialogClose,
