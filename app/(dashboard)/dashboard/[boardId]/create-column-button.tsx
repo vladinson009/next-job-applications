@@ -24,7 +24,7 @@ import { columnSchema } from '@/validations/columnValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
-import { createNewColumn } from '../actions/createNewColumn';
+import { createNewColumn } from '../../../../features/dashboard/actions/createNewColumn';
 import { useState } from 'react';
 
 export default function CreateColumnButton({ boardId }: { boardId: string }) {

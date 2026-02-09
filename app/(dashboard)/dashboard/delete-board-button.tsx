@@ -1,4 +1,6 @@
 'use client';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { deleteBoardById } from '../../../features/dashboard/actions/deleteBoardById';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,15 +12,14 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
-import { JobFromDB } from '@/types/Job';
-import { deleteJobById } from '../actions/deleteJobById';
-import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { BoardFromDB } from '@/types/Board';
 
-type Props = { job: JobFromDB };
-
-export default function DeleteJobButton({ job }: Props) {
+type Props = {
+  board: BoardFromDB;
+};
+export default function DeleteBoardButton({ board }: Props) {
   async function onDelete() {
-    await deleteJobById(job.id);
+    await deleteBoardById(board.id);
   }
 
   return (
@@ -30,10 +31,10 @@ export default function DeleteJobButton({ job }: Props) {
         <AlertDialogContent size="sm">
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Are you sure you want to delete job as &quot;{job.title}&quot;?
+              Are you sure you want to delete &quot;{board.name}&quot;?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your job
+              This action cannot be undone. This will permanently delete your board
               from our servers.
             </AlertDialogDescription>
           </AlertDialogHeader>

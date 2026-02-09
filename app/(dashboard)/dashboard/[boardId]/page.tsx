@@ -1,5 +1,5 @@
 import Container from '@/components/container';
-import { fetchColumnsByBoardId } from '../actions/fetchColumnsByBoardId';
+import { fetchColumnsByBoardId } from '../../../../features/dashboard/actions/fetchColumnsByBoardId';
 import {
   Card,
   CardAction,
@@ -21,7 +21,7 @@ import {
 import DeleteColumnButton from './delete-column-button';
 import CreateColumnButton from './create-column-button';
 import CreateJobButton from './create-job-button';
-import { fetchJobsByBoardId } from '../actions/fetchJobsByBoardId';
+import { fetchJobsByBoardId } from '../../../../features/dashboard/actions/fetchJobsByBoardId';
 import JobCard from './job-card';
 import MoveColumnButton from './move-column-button';
 

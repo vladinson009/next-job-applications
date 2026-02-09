@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation';
-import { validateToken } from './actions/validateToken';
 import Container from '@/components/container';
-import { AlertCircle, AlertCircleIcon, CheckCircle2Icon } from 'lucide-react';
+import { AlertCircleIcon, CheckCircle2Icon } from 'lucide-react';
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+import { validateToken } from '@/features/public/actions';
 
 type SearchParams = { token: string | undefined };
 type Props = {

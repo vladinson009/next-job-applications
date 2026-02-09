@@ -15,11 +15,11 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SignInOutputSchema, SignInSchema } from '@/types/User';
 import { isRedirectError } from '@/lib/redirectError';
-import { credentialSignIn } from '../actions/credentials-sign-in';
 import { useState } from 'react';
 import { generateVerificationToken } from '@/lib/generateVerificationToken';
 import { toast } from 'sonner';
-import { resendEmailHelper } from './helpers/resendEmail';
+import { resendEmailHelper } from '../../../features/auth/resendEmail';
+import { credentialSignIn } from '@/features/auth/actions';
 
 export default function SignInForm() {
   const [isVerified, setIsVerified] = useState<boolean>(true);

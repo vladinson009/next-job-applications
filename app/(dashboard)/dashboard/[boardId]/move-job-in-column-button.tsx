@@ -1,7 +1,7 @@
 'use client';
 
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { moveJobInColumnById } from '../actions/moveJobInColumnById';
+import { moveJobInColumnById } from '../../../../features/dashboard/actions/moveJobInColumnById';
 
 type Props = {
   columnId: string;

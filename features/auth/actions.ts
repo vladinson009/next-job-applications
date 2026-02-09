@@ -1,6 +1,11 @@
 'use server';
 
-import type { UserResponse, InsertNewUser, SignUpOutputSchema } from '@/types/User';
+import type {
+  UserResponse,
+  InsertNewUser,
+  SignUpOutputSchema,
+  SignInOutputSchema,
+} from '@/types/User';
 import type { ActionError } from '@/types/Error';
 
 import { db } from '@/db';
@@ -14,6 +19,9 @@ import { sendEmail } from '@/lib/sendEmail';
 import { redirect } from 'next/navigation';
 import { isRedirectError } from '@/lib/redirectError';
 import { emailText } from '@/constants/emailVerification';
+import { AuthError } from 'next-auth';
+import { signIn } from '@/auth';
+import { Providers } from '@/types/Providers';
 
 export async function createUser(
   userInput: SignUpOutputSchema,
@@ -110,5 +118,46 @@ export async function createUser(
         message: "Can't create an user. It's on us",
       } satisfies ActionError,
     };
+  }
+}
+
+export async function credentialSignIn(data: SignInOutputSchema) {
+  try {
+    await signIn('credentials', {
+      ...data,
+      redirectTo: '/',
+    });
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+    if (error instanceof AuthError && error.message.includes('EMAIL_NOT_VERIFIED')) {
+      const [user] = await db
+        .select({ name: UsersTable.name, email: UsersTable.email })
+        .from(UsersTable)
+        .where(
+          or(
+            eq(UsersTable.email, data.credential),
+            eq(UsersTable.name, data.credential),
+          ),
+        )
+        .limit(1);
+
+      return { reason: 'emailVerified', message: 'Please verify your email', user };
+    }
+    return { reason: 'credentials', message: 'Invalid credentials' };
+  }
+}
+
+export async function providerSignIn(provider: Providers) {
+  try {
+    await signIn(provider, {
+      redirectTo: '/',
+    });
+  } catch (error) {
+    if (isRedirectError(error)) {
+      throw error;
+    }
+    return { message: 'Invalid credentials' };
   }
 }

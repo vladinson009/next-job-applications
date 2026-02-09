@@ -1,6 +1,6 @@
 'use client';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
-import { deleteBoardById } from './actions/deleteBoardById';
+import { deleteBoardById } from '../../../features/dashboard/actions/deleteBoardById';
 import {
   Dialog,
   DialogClose,
@@ -26,7 +26,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
-import { editBoardById } from './actions/editBoardById';
+import { editBoardById } from '../../../features/dashboard/actions/editBoardById';
 
 type Props = {
   board: BoardFromDB;

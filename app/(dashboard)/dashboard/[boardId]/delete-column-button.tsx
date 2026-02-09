@@ -12,7 +12,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { ColumnFromDB } from '@/types/Column';
-import { deleteColumnById } from '../actions/deleteColumnById';
+import { deleteColumnById } from '../../../../features/dashboard/actions/deleteColumnById';
 
 type Props = {
   column: ColumnFromDB;

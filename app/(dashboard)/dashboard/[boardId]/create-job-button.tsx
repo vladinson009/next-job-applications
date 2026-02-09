@@ -29,7 +29,7 @@ import { ColumnFromDB } from '@/types/Column';
 import { Badge } from '@/components/ui/badge';
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
 import { Label } from '@/components/ui/label';
-import { createNewJob } from '../actions/createNewJob';
+import { createNewJob } from '../../../../features/dashboard/actions/createNewJob';
 import { useEffect, useState } from 'react';
 
 type Props = {

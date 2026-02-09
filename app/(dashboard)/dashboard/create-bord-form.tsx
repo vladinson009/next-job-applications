@@ -13,7 +13,7 @@ import { boardSchema } from '@/validations/boardValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
-import { createNewBoard } from './actions/createNewBoard';
+import { createNewBoard } from '../../../features/dashboard/actions/createNewBoard';
 import { DialogClose } from '@/components/ui/dialog';
 
 type CreateBoardSchema = z.infer<typeof boardSchema>;

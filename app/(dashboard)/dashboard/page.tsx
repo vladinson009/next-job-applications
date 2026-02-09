@@ -9,7 +9,7 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import Link from 'next/link';
-import { fetchBoards } from './actions/fetchBoards';
+import { fetchBoards } from '../../../features/dashboard/actions/fetchBoards';
 import { MoreVerticalIcon } from 'lucide-react';
 import {
   DropdownMenu,

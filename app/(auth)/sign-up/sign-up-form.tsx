@@ -14,9 +14,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { SignUpOutputSchema, SignUpSchema } from '@/types/User';
-import { createUser } from '../actions/create-user';
 import { toast } from 'sonner';
 import { isRedirectError } from '@/lib/redirectError';
+import { createUser } from '@/features/auth/actions';
 
 export default function SignUpForm() {
   const form = useForm<SignUpSchema>({

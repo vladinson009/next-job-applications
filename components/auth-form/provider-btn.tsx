@@ -1,10 +1,10 @@
 'use client';
 
-import { providerSignIn } from '@/app/auth/actions/provider-sign-in';
 import { Button } from '@/components/ui/button';
 import { Providers } from '@/types/Providers';
 import { PropsWithChildren } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '../ui/avatar';
+import { providerSignIn } from '@/features/auth/actions';
 
 export default function ProviderBtn({
   children,
