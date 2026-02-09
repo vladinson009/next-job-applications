@@ -20,7 +20,7 @@ import { redirect } from 'next/navigation';
 import { isRedirectError } from '@/lib/redirectError';
 import { emailText } from '@/constants/emailVerification';
 import { AuthError } from 'next-auth';
-import { signIn } from '@/auth';
+import { signIn, signOut } from '@/auth';
 import { Providers } from '@/types/Providers';
 
 export async function createUser(
@@ -160,4 +160,8 @@ export async function providerSignIn(provider: Providers) {
     }
     return { message: 'Invalid credentials' };
   }
+}
+
+export async function logoutAction() {
+  await signOut({ redirectTo: '/auth/sign-in' });
 }

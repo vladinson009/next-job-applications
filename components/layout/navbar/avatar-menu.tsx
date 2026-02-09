@@ -1,6 +1,6 @@
 'use client';
 import { isRedirectError } from '@/lib/redirectError';
-import { logoutAction } from './actions/logout-action';
+
 import { toast } from 'sonner';
 import {
   DropdownMenu,
@@ -10,11 +10,11 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '../ui/dropdown-menu';
-import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from '../ui/avatar';
+} from '../../ui/dropdown-menu';
+import { Avatar, AvatarFallback, AvatarImage } from '../../ui/avatar';
 import { User } from 'next-auth';
-import { Button } from '../ui/button';
 import Link from 'next/link';
+import { logoutAction } from '@/features/auth/actions';
 
 type Props = {
   user: User;

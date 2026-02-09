@@ -27,7 +27,7 @@ export default function SignInPage() {
             Dont&apos;t have an account? Sign Up{' '}
             <Link
               className="underline text-foreground hover:no-underline"
-              href="/auth/sign-up"
+              href="/sign-up"
             >
               here
             </Link>

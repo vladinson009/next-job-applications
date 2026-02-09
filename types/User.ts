@@ -17,3 +17,12 @@ export type UserResponse =
 
 export type SignInSchema = z.infer<typeof signInSchema>;
 export type SignInOutputSchema = z.output<typeof signInSchema>;
+
+export type AuthUserSession =
+  | {
+      id?: string | undefined;
+      name?: string | null | undefined;
+      email?: string | null | undefined;
+      image?: string | null | undefined;
+    }
+  | undefined;

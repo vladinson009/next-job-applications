@@ -1,7 +1,7 @@
 import { BriefcaseBusiness } from 'lucide-react';
-import { Button } from '../ui/button';
+import { Button } from '../../ui/button';
 import Link from 'next/link';
-import Container from '../container';
+import Container from '../../container';
 import { auth } from '@/auth';
 import AvatarMenu from './avatar-menu';
 
@@ -23,18 +23,9 @@ export default async function Navbar() {
               <>
                 <li>
                   <Button variant="default" asChild>
-                    <Link href="/auth/sign-in">Sign In</Link>
+                    <Link href="/sign-in">Sign In</Link>
                   </Button>
                 </li>
-                {/* <li>
-                <Button
-                  className="hover:bg-color2 hover:text-color3"
-                  variant="outline"
-                  asChild
-                >
-                  <Link href="/auth/sign-up">Sign Up</Link>
-                </Button>
-              </li> */}
               </>
             )}
             {!!isAuth && (

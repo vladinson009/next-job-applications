@@ -1,1 +1,1 @@
-export type Providers = 'google' | 'github' | 'bankid-no';
+export type Providers = 'google' | 'github';

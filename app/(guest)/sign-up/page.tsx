@@ -1,9 +1,7 @@
 import Container from '@/components/container';
 import {
   Card,
-  CardAction,
   CardContent,
-  CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
@@ -28,7 +26,7 @@ export default function SignUpPage() {
             Already have an account? Sign In{' '}
             <Link
               className="underline text-foreground hover:no-underline"
-              href="/auth/sign-in"
+              href="/sign-in"
             >
               here
             </Link>
