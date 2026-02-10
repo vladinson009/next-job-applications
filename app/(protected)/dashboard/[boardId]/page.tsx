@@ -37,8 +37,12 @@ export default async function BoardPage({ params }: Props) {
 
   const columnsPromise = fetchColumnsByBoardId(boardId);
   const jobsPromise = fetchJobsByBoardId(boardId);
-  const [columns, jobsFromServer] = await Promise.all([columnsPromise, jobsPromise]);
-  const jobs = jobsFromServer ?? [];
+  const [columnsFromServer, jobsFromServer] = await Promise.all([
+    columnsPromise,
+    jobsPromise,
+  ]);
+  const jobs = jobsFromServer.data ?? [];
+  const columns = columnsFromServer.data ?? [];
 
   const sortedJobs =
     jobs?.reduce<Record<string, typeof jobs>>((acc, current) => {
@@ -54,11 +58,11 @@ export default async function BoardPage({ params }: Props) {
       <Container className="pb-5">
         <CreateColumnButton boardId={boardId} />
         <h2>{columns && columns[0].boardName}</h2>
-        <div className="flex gap-3 overflow-auto w-full h-[70vh]">
+        <div className="flex gap-3 overflow-auto w-full min-h-125 h-[70vh]">
           {columns?.length &&
             columns?.map((column, colIndex) => (
               <Card
-                className="bg-foreground shrink-0 w-1/3 min-w-55 even:bg-muted-foreground"
+                className="bg-foreground shrink-0 w-1/3 min-w-80 even:bg-muted-foreground"
                 key={column.id}
               >
                 <CardHeader>

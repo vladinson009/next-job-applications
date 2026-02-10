@@ -24,7 +24,7 @@ export default function DashboardLayout({ children }: PropsWithChildren) {
   });
   return (
     <>
-      <Breadcrumb className="flex justify-center pt-5">
+      <Breadcrumb className="flex justify-center py-5">
         <BreadcrumbList>
           {breadcrumbs.map((crumb) => (
             <Fragment key={crumb.href}>

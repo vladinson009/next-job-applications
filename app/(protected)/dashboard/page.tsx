@@ -10,19 +10,12 @@ import {
 } from '@/components/ui/card';
 import Link from 'next/link';
 import { fetchBoards } from '../../../features/dashboard/actions/fetchBoards';
-import { MoreVerticalIcon } from 'lucide-react';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import DeleteBoardButton from './delete-board-button';
-import EditBoardButton from './edit-board-button';
 import CreateBoardButton from './create-board-button';
+import BoardDropDown from './board-dropdown';
 
 export default async function DashboardPage() {
-  const boards = await fetchBoards();
-
+  const data = await fetchBoards();
+  const boards = data.data ?? [];
   return (
     <section>
       <Container className="my-5 xl:my-15 space-y-5">
@@ -37,17 +30,7 @@ export default async function DashboardPage() {
                   <p>Last update: {board.updatedAt.toLocaleDateString()}</p>
                 </CardDescription>
                 <CardAction>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger>
-                      <MoreVerticalIcon />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                      {/* Content */}
-                      <DeleteBoardButton board={board} />
-                      <EditBoardButton board={board} />
-                      {/* Content */}
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+                  <BoardDropDown board={board} />
                 </CardAction>
               </CardHeader>
               <CardContent>
