@@ -1,4 +1,3 @@
-import { VerifyEmailTemplate } from '@/components/verify-email-template';
 import { emailText } from '@/constants/emailVerification';
 import { sendEmail } from '@/lib/sendEmail';
 import { NextRequest, NextResponse } from 'next/server';

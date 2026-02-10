@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import './globals.css';
-import Navbar from '@/components/navbar/navbar';
+import Navbar from '@/components/layout/navbar/navbar';
 import { Toaster } from 'sonner';
-import Footer from '@/components/footer';
+import Footer from '@/components/layout/footer';
+import { AuthProvider } from '@/components/auth-context-provider';
+import { requestUser } from '@/lib/auth-server';
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -20,20 +22,24 @@ export const metadata: Metadata = {
   description: 'Made with love by Vladimir',
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const user = await requestUser();
+
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen overflow-x-hidden`}
       >
-        <Navbar />
-        <main className="flex flex-col min-h-0 relative flex-1">{children}</main>
-        <Footer />
-        <Toaster />
+        <AuthProvider isAuth={!!user} user={user}>
+          <Navbar />
+          <main className="flex flex-col min-h-0 relative flex-1">{children}</main>
+          <Footer />
+          <Toaster />
+        </AuthProvider>
       </body>
     </html>
   );
