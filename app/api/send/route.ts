@@ -4,12 +4,12 @@ import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   try {
-    const body: { email: string; name: string; verifyUrl: string } =
+    const body: { email: string; username: string; verifyUrl: string } =
       await req.json();
 
-    const { email, name, verifyUrl } = body;
+    const { email, username, verifyUrl } = body;
 
-    if (!email || !name || !verifyUrl) {
+    if (!email || !username || !verifyUrl) {
       return NextResponse.json(
         {
           error: 'Missing email, name or verifyUrl',
@@ -21,7 +21,7 @@ export async function POST(req: NextRequest) {
     const emailData = await sendEmail({
       to: email,
       subject: 'Verify your email',
-      html: emailText(verifyUrl, name),
+      html: emailText(verifyUrl, username),
     });
 
     return Response.json(emailData);
