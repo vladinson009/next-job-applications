@@ -7,14 +7,25 @@ import { isRedirectError } from '@/lib/redirectError';
 import { BoardFromDB } from '@/types/Board';
 import { and, eq, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+type ErrorCases =
+  | 'CHOOSE_DIFFERENT_NAME'
+  | 'NON_EXISTING_NAME'
+  | 'UNAUTHORIZED'
+  | 'SERVER_ERROR';
+type RenameBoardByIdResponse =
+  | { success: true }
+  | { success: false; error: ErrorCases };
 
-export async function renameBoardById(board: BoardFromDB, newName: string) {
+export async function renameBoardById(
+  board: BoardFromDB,
+  newName: string,
+): Promise<RenameBoardByIdResponse> {
   try {
     // Validate new board name
-    if (board.name === newName) {
+    if (board.name.trim() === newName.trim()) {
       return { success: false, error: 'CHOOSE_DIFFERENT_NAME' };
     }
-    if (!newName.trim()) {
+    if (!newName) {
       return { success: false, error: 'NON_EXISTING_NAME' };
     }
 
