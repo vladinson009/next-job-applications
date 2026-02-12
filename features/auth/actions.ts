@@ -42,19 +42,19 @@ export async function createUser(
         error,
       };
     }
-    const { email, password, name } = parsedData.data;
+    const { email, password, username } = parsedData.data;
 
     // Check for existing user
     const [existingUser] = await db
-      .select({ email: UsersTable.email, name: UsersTable.name })
+      .select({ email: UsersTable.email, username: UsersTable.username })
       .from(UsersTable)
-      .where(or(eq(UsersTable.email, email), eq(UsersTable.name, name)))
+      .where(or(eq(UsersTable.email, email), eq(UsersTable.username, username)))
       .limit(1);
 
     if (existingUser) {
       const issues: $ZodIssue[] = [];
       const existingEmail = existingUser.email === email;
-      const existingUsername = existingUser.name === name;
+      const existingUsername = existingUser.username === username;
 
       if (existingEmail) {
         issues.push({
@@ -65,7 +65,7 @@ export async function createUser(
       }
       if (existingUsername) {
         issues.push({
-          path: ['name'],
+          path: ['username'],
           message: 'Username already exist',
           code: 'custom',
         });
@@ -88,7 +88,7 @@ export async function createUser(
     const [user] = await db
       .insert(UsersTable)
       .values({
-        name,
+        username,
         email,
         password: hashedPassword,
       } satisfies InsertNewUser)
@@ -102,7 +102,7 @@ export async function createUser(
     await sendEmail({
       to: email,
       subject: 'Verify your email',
-      html: emailText(verifyUrl, user.name),
+      html: emailText(verifyUrl, user.username),
     });
 
     redirect('/');
@@ -133,19 +133,24 @@ export async function credentialSignIn(data: SignInOutputSchema) {
     }
     if (error instanceof AuthError && error.message.includes('EMAIL_NOT_VERIFIED')) {
       const [user] = await db
-        .select({ name: UsersTable.name, email: UsersTable.email })
+        .select({ username: UsersTable.username, email: UsersTable.email })
         .from(UsersTable)
         .where(
           or(
             eq(UsersTable.email, data.credential),
-            eq(UsersTable.name, data.credential),
+            eq(UsersTable.username, data.credential),
           ),
         )
         .limit(1);
 
-      return { reason: 'emailVerified', message: 'Please verify your email', user };
+      return {
+        success: false,
+        reason: 'emailVerified',
+        message: 'Please verify your email',
+        user,
+      };
     }
-    return { reason: 'credentials', message: 'Invalid credentials' };
+    return { success: false, reason: 'credentials', message: 'Invalid credentials' };
   }
 }
 
@@ -163,5 +168,5 @@ export async function providerSignIn(provider: Providers) {
 }
 
 export async function logoutAction() {
-  await signOut({ redirectTo: '/auth/sign-in' });
+  await signOut({ redirectTo: '/sign-in' });
 }
