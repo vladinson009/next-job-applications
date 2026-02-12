@@ -21,8 +21,10 @@ export type SignInOutputSchema = z.output<typeof signInSchema>;
 export type AuthUserSession =
   | {
       id?: string | undefined;
-      name?: string | null | undefined;
       email?: string | null | undefined;
+      username?: string | null | undefined;
+      name?: string | null | undefined;
       image?: string | null | undefined;
+      role?: string | null | undefined;
     }
   | undefined;
