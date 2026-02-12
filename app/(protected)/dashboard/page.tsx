@@ -18,11 +18,11 @@ export default async function DashboardPage() {
   const boards = data.data ?? [];
   return (
     <section>
-      <Container className="my-5 xl:my-15 space-y-5">
+      <Container className="my-5 space-y-5 ">
         <CreateBoardButton />
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {boards.map((board) => (
-            <Card key={board.id} className="">
+            <Card key={board.id}>
               <CardHeader>
                 <CardTitle>{board.name}</CardTitle>
                 <CardDescription>
