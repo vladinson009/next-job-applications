@@ -46,7 +46,7 @@ export async function createNewJob(
       companyName: parsedData.data.companyName,
       location: parsedData.data.location,
       title: parsedData.data.title,
-      remote: parsedData.data.remote === 'true' ? true : false,
+      remote: parsedData.data.remote ? true : false,
       salary: parsedData.data.salary || null,
       boardId: boardId,
     });
@@ -56,11 +56,11 @@ export async function createNewJob(
       .set({ updatedAt: sql`NOW()` })
       .where(eq(ColumnsTable.id, columnId));
 
-    const [newJob] = await Promise.all([newJobQuery, touchColumnQuery]);
+    await Promise.all([newJobQuery, touchColumnQuery]);
 
     revalidatePath(`/dashboard/${boardId}`);
 
-    return { success: true, data: newJob };
+    return { success: true };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
