@@ -14,8 +14,5 @@ export const jobSchema = z.object({
     .min(1, 'Location is required')
     .max(255, 'Location length is too long. Limit 255 characters'),
   salary: z.coerce.number<number>('Salary must be a number').optional(),
-  remote: z
-    .enum(['true', 'false'], 'Remote must be a boolean')
-    .default('false')
-    .nonoptional(),
+  remote: z.boolean('Remote must be a boolean').default(false).nonoptional(),
 });
