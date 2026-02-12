@@ -5,15 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1770495926455,
-      "tag": "0000_plain_rawhide_kid",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1770506993262,
-      "tag": "0001_loose_jetstream",
+      "when": 1770759170284,
+      "tag": "0000_colorful_photon",
       "breakpoints": true
     }
   ]

@@ -11,8 +11,9 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { JobFromDB } from '@/types/Job';
-import { deleteJobById } from '../../../../features/dashboard/actions/deleteJobById';
+import { deleteJobById } from '@/features/dashboard/actions/deleteJobById';
 import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
+import { Trash2 } from 'lucide-react';
 
 type Props = { job: JobFromDB };
 
@@ -24,8 +25,11 @@ export default function DeleteJobButton({ job }: Props) {
   return (
     <DropdownMenuItem asChild>
       <AlertDialog>
-        <AlertDialogTrigger className="p-2 text-sm hover:bg-secondary text-left w-full rounded-md text-destructive">
-          Delete
+        <AlertDialogTrigger className="flex justify-between items-center p-2 text-sm hover:bg-secondary text-left w-full rounded-md text-destructive">
+          <span>Delete</span>
+          <span>
+            <Trash2 />
+          </span>
         </AlertDialogTrigger>
         <AlertDialogContent size="sm">
           <AlertDialogHeader>

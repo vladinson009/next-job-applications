@@ -34,7 +34,8 @@ CREATE TABLE "account" (
 --> statement-breakpoint
 CREATE TABLE "user" (
 	"id" uuid PRIMARY KEY DEFAULT gen_random_uuid() NOT NULL,
-	"name" varchar(100) NOT NULL,
+	"name" varchar(100),
+	"username" varchar(100) NOT NULL,
 	"email" varchar(100) NOT NULL,
 	"emailVerified" timestamp,
 	"image" text,
@@ -43,7 +44,7 @@ CREATE TABLE "user" (
 	"age" integer,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
-	CONSTRAINT "user_name_unique" UNIQUE("name"),
+	CONSTRAINT "user_username_unique" UNIQUE("username"),
 	CONSTRAINT "user_email_unique" UNIQUE("email")
 );
 --> statement-breakpoint
@@ -64,6 +65,7 @@ CREATE TABLE "jobs" (
 	"position" integer NOT NULL,
 	"column_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
+	"board_id" uuid NOT NULL,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL
 );
@@ -74,6 +76,7 @@ ALTER TABLE "columns" ADD CONSTRAINT "columns_user_id_user_id_fk" FOREIGN KEY ("
 ALTER TABLE "account" ADD CONSTRAINT "account_userId_user_id_fk" FOREIGN KEY ("userId") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "jobs" ADD CONSTRAINT "jobs_column_id_columns_id_fk" FOREIGN KEY ("column_id") REFERENCES "public"."columns"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "jobs" ADD CONSTRAINT "jobs_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
+ALTER TABLE "jobs" ADD CONSTRAINT "jobs_board_id_boards_id_fk" FOREIGN KEY ("board_id") REFERENCES "public"."boards"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 CREATE INDEX "columns_board_idx" ON "columns" USING btree ("board_id");--> statement-breakpoint
 CREATE UNIQUE INDEX "verification_tokens_identifier_unique" ON "verification_tokens" USING btree ("identifier");--> statement-breakpoint
 CREATE INDEX "jobs_column_idx" ON "jobs" USING btree ("column_id");

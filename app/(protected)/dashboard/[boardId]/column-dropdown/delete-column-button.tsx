@@ -12,21 +12,29 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog';
 import { ColumnFromDB } from '@/types/Column';
-import { deleteColumnById } from '../../../../features/dashboard/actions/deleteColumnById';
+import { deleteColumnById } from '../../../../../features/dashboard/actions/deleteColumnById';
+import { Trash2 } from 'lucide-react';
 
 type Props = {
   column: ColumnFromDB;
 };
-export default function DeleteColumnButton({ column }: Props) {
+type StateHook = {
+  setOpen: (boolean: boolean) => void;
+};
+export default function DeleteColumnButton({ column, setOpen }: Props & StateHook) {
   async function onDelete() {
     await deleteColumnById(column.id);
+    setOpen(false);
   }
 
   return (
     <DropdownMenuItem asChild>
       <AlertDialog>
-        <AlertDialogTrigger className="p-2 text-sm hover:bg-secondary text-left w-full rounded-md text-destructive">
-          Delete
+        <AlertDialogTrigger className="flex justify-between items-center p-2 text-sm hover:bg-secondary text-left w-full rounded-md text-destructive">
+          <span>Delete</span>
+          <span>
+            <Trash2 />
+          </span>
         </AlertDialogTrigger>
         <AlertDialogContent size="sm">
           <AlertDialogHeader>
@@ -39,7 +47,9 @@ export default function DeleteColumnButton({ column }: Props) {
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogCancel onClick={setOpen.bind(null, false)}>
+              Cancel
+            </AlertDialogCancel>
             <AlertDialogAction onClick={onDelete} variant="destructive">
               Confirm
             </AlertDialogAction>

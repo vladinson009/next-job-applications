@@ -11,7 +11,7 @@ import {
 import Link from 'next/link';
 import { fetchBoards } from '../../../features/dashboard/actions/fetchBoards';
 import CreateBoardButton from './create-board-button';
-import BoardDropDown from './board-dropdown';
+import BoardDropDown from './board-dropdown/board-dropdown';
 
 export default async function DashboardPage() {
   const data = await fetchBoards();

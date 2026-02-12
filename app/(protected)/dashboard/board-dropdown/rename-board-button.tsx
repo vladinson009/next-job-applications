@@ -1,15 +1,3 @@
-'use client';
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from '@/components/ui/alert-dialog';
 import { Button } from '@/components/ui/button';
 import {
   Dialog,
@@ -21,12 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenuItem } from '@/components/ui/dropdown-menu';
 import {
   Form,
   FormControl,
@@ -36,67 +19,23 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { deleteBoardById } from '@/features/dashboard/actions/deleteBoardById';
 import { renameBoardById } from '@/features/dashboard/actions/renameBoardById';
 import { BoardFromDB } from '@/types/Board';
 import { boardSchema } from '@/validations/boardValidation';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { MoreVerticalIcon } from 'lucide-react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import z from 'zod';
 
 type Props = {
   board: BoardFromDB;
 };
+type StateHook = {
+  setOpen: (boolean: boolean) => void;
+};
 
-export default function BoardDropDown({ board }: Props) {
-  return (
-    <DropdownMenu>
-      <DropdownMenuTrigger>
-        <MoreVerticalIcon />
-      </DropdownMenuTrigger>
-      <DropdownMenuContent>
-        {/* Content */}
-        <DeleteBoardButton board={board} />
-        <RenameBoardButton board={board} />
-        {/* Content */}
-      </DropdownMenuContent>
-    </DropdownMenu>
-  );
-}
-
-function DeleteBoardButton({ board }: Props) {
-  async function onDelete() {
-    await deleteBoardById(board.id);
-  }
-  return (
-    <DropdownMenuItem asChild>
-      <AlertDialog>
-        <AlertDialogTrigger className="p-2 text-sm hover:bg-secondary text-left w-full rounded-md text-destructive">
-          Delete
-        </AlertDialogTrigger>
-        <AlertDialogContent size="sm">
-          <AlertDialogHeader>
-            <AlertDialogTitle>
-              Are you sure you want to delete &quot;{board.name}&quot;?
-            </AlertDialogTitle>
-            <AlertDialogDescription>
-              This action cannot be undone. This will permanently delete your board
-              from our servers.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction onClick={onDelete} variant="destructive">
-              Confirm
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </DropdownMenuItem>
-  );
-}
-function RenameBoardButton({ board }: Props) {
+export function RenameBoardButton({ board, setOpen }: Props & StateHook) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const form = useForm<z.infer<typeof boardSchema>>({
     resolver: zodResolver(boardSchema),
     defaultValues: {
@@ -104,12 +43,54 @@ function RenameBoardButton({ board }: Props) {
     },
   });
   async function onRename(data: z.output<typeof boardSchema>) {
-    await renameBoardById(board, data.name);
+    if (data.name === board.name) {
+      return form.setError('name', {
+        message: 'Choose different board name',
+        type: 'validation',
+      });
+    }
+    try {
+      const response = await renameBoardById(board, data.name);
+
+      if (!response.success) {
+        switch (response.error) {
+          case 'CHOOSE_DIFFERENT_NAME':
+            form.setError('name', {
+              message: 'Choose different board name',
+              type: 'validation',
+            });
+            break;
+          case 'NON_EXISTING_NAME':
+            form.setError('name', {
+              message: 'Board name is required',
+              type: 'validation',
+            });
+            break;
+          case 'UNAUTHORIZED':
+            form.setError('name', {
+              message: 'You are not authorized',
+              type: 'validation',
+            });
+            break;
+          case 'SERVER_ERROR':
+            form.setError('name', {
+              message: 'Something went wrong on the server',
+              type: 'validation',
+            });
+            break;
+        }
+        return;
+      }
+      setIsModalOpen(false);
+      setOpen(false);
+    } catch (error) {
+      console.error('[RenameBoardButton]', error);
+    }
   }
 
   return (
     <DropdownMenuItem asChild>
-      <Dialog>
+      <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
         <DialogTrigger
           type="button"
           className="p-2 text-sm hover:bg-secondary text-left w-full rounded-md"
@@ -143,13 +124,16 @@ function RenameBoardButton({ board }: Props) {
               />
               <DialogFooter>
                 <DialogClose asChild>
-                  <Button type="button" variant="outline">
+                  <Button
+                    onClick={setOpen.bind(null, false)}
+                    type="button"
+                    variant="outline"
+                  >
                     Close
                   </Button>
                 </DialogClose>
-                <DialogClose asChild>
-                  <Button type="submit">Save changes</Button>
-                </DialogClose>
+
+                <Button type="submit">Save changes</Button>
               </DialogFooter>
             </form>
           </Form>
