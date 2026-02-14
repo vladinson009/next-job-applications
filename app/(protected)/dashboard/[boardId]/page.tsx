@@ -15,6 +15,7 @@ import CreateJobButton from './column-dropdown/create-job-button';
 import { fetchJobsByBoardId } from '../../../../features/dashboard/actions/fetchJobsByBoardId';
 import JobCard from './job-dropdown/job-card';
 import ColumnDropdown from './column-dropdown/column-dropdown';
+import { dataFormatter } from '@/lib/dataFormatter';
 
 type Props = {
   params: {
@@ -63,7 +64,7 @@ export default async function BoardPage({ params }: Props) {
                     </Badge>
                   </CardTitle>
                   <CardDescription className="text-background">
-                    Last update: {column.updatedAt.toLocaleDateString()}
+                    Last update: {dataFormatter(column.updatedAt)}
                   </CardDescription>
                   <CardAction>
                     <ColumnDropdown
@@ -85,8 +86,7 @@ export default async function BoardPage({ params }: Props) {
                     />
                   ))}
                 </CardContent>
-                <CardFooter className="flex justify-between mt-auto">
-                  <p></p>
+                <CardFooter className="mt-auto">
                   <CreateJobButton column={column} boardId={boardId} />
                 </CardFooter>
               </Card>

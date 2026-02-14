@@ -69,7 +69,7 @@ export default function EditJobButton({ job, setOpen }: Props) {
       <DialogTrigger className="flex justify-between items-center p-2 text-sm hover:bg-secondary text-left w-full rounded-md">
         <span>Edit</span>
         <span>
-          <EditIcon />
+          <EditIcon className="size-5" />
         </span>
       </DialogTrigger>
       <DialogContent>

@@ -31,7 +31,7 @@ export function JobDropdown({
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger className="rounded-sm hover:bg-secondary">
         <MoreVerticalIcon className="text-primary" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>

@@ -65,8 +65,13 @@ export default function CreateJobButton({ column, boardId }: Props) {
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <PlusIcon className="text-primary" />
+      <DialogTrigger className="w-full rounded-sm hover:bg-secondary">
+        <p className="text-primary flex gap-2 items-center">
+          <span>
+            <PlusIcon />
+          </span>
+          <span> Add item</span>
+        </p>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>

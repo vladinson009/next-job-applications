@@ -12,6 +12,7 @@ import {
 import { JobFromDB } from '@/types/Job';
 import Link from 'next/link';
 import { JobDropdown } from './job-dropdown';
+import { dataFormatter } from '@/lib/dataFormatter';
 
 type Props = {
   job: JobFromDB;
@@ -68,10 +69,10 @@ export default function JobCard({
       </CardContent>
       <CardFooter className="flex flex-wrap items-start gap-1">
         <Badge className="bg-foreground">
-          Last update: {job.updatedAt.toLocaleDateString()}
+          Updated: {dataFormatter(job.updatedAt, true)}
         </Badge>
         <Badge className="bg-muted-foreground">
-          Created at: {job.createdAt.toLocaleDateString()}
+          Created: {dataFormatter(job.createdAt, true)}
         </Badge>
       </CardFooter>
     </Card>

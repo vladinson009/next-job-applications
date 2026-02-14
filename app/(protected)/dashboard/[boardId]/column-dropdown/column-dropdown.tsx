@@ -24,7 +24,7 @@ export default function ColumnDropdown({ column, columns, colIndex }: Props) {
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger className="rounded-sm hover:bg-secondary">
         <MoreVerticalIcon className="text-primary" />
       </DropdownMenuTrigger>
       <DropdownMenuContent>

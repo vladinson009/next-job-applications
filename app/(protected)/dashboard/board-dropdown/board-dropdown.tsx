@@ -20,7 +20,7 @@ export default function BoardDropDown({ board }: Props) {
 
   return (
     <DropdownMenu open={open} onOpenChange={setOpen}>
-      <DropdownMenuTrigger>
+      <DropdownMenuTrigger className="text-primary hover:bg-secondary rounded-sm">
         <MoreVerticalIcon />
       </DropdownMenuTrigger>
       <DropdownMenuContent>

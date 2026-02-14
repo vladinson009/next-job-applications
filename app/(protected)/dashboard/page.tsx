@@ -12,6 +12,8 @@ import Link from 'next/link';
 import { fetchBoards } from '../../../features/dashboard/actions/fetchBoards';
 import CreateBoardButton from './create-board-button';
 import BoardDropDown from './board-dropdown/board-dropdown';
+import { dataFormatter } from '@/lib/dataFormatter';
+import { Badge } from '@/components/ui/badge';
 
 export default async function DashboardPage() {
   const data = await fetchBoards();
@@ -24,10 +26,12 @@ export default async function DashboardPage() {
           {boards.map((board) => (
             <Card key={board.id}>
               <CardHeader>
-                <CardTitle>{board.name}</CardTitle>
+                <CardTitle>
+                  <Badge className="bg-foreground">{board.name}</Badge>
+                </CardTitle>
                 <CardDescription>
-                  <p>Created at: {board.createdAt.toLocaleDateString()}</p>
-                  <p>Last update: {board.updatedAt.toLocaleDateString()}</p>
+                  <p>Created at: {dataFormatter(board.createdAt)}</p>
+                  <p>Last update: {dataFormatter(board.updatedAt)}</p>
                 </CardDescription>
                 <CardAction>
                   <BoardDropDown board={board} />

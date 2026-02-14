@@ -28,7 +28,7 @@ export default function DeleteJobButton({ job }: Props) {
         <AlertDialogTrigger className="flex justify-between items-center p-2 text-sm hover:bg-secondary text-left w-full rounded-md text-destructive">
           <span>Delete</span>
           <span>
-            <Trash2 />
+            <Trash2 className="size-5" />
           </span>
         </AlertDialogTrigger>
         <AlertDialogContent size="sm">
