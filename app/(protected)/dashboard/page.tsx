@@ -11,23 +11,27 @@ import {
 import Link from 'next/link';
 import { fetchBoards } from '../../../features/dashboard/actions/fetchBoards';
 import CreateBoardButton from './create-board-button';
-import BoardDropDown from './board-dropdown';
+import BoardDropDown from './board-dropdown/board-dropdown';
+import { dataFormatter } from '@/lib/dataFormatter';
+import { Badge } from '@/components/ui/badge';
 
 export default async function DashboardPage() {
   const data = await fetchBoards();
   const boards = data.data ?? [];
   return (
     <section>
-      <Container className="my-5 xl:my-15 space-y-5">
+      <Container className="my-5 space-y-5 ">
         <CreateBoardButton />
         <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
           {boards.map((board) => (
-            <Card key={board.id} className="">
+            <Card key={board.id}>
               <CardHeader>
-                <CardTitle>{board.name}</CardTitle>
+                <CardTitle>
+                  <Badge className="bg-foreground">{board.name}</Badge>
+                </CardTitle>
                 <CardDescription>
-                  <p>Created at: {board.createdAt.toLocaleDateString()}</p>
-                  <p>Last update: {board.updatedAt.toLocaleDateString()}</p>
+                  <p>Created at: {dataFormatter(board.createdAt)}</p>
+                  <p>Last update: {dataFormatter(board.updatedAt)}</p>
                 </CardDescription>
                 <CardAction>
                   <BoardDropDown board={board} />

@@ -22,7 +22,7 @@ export default function SignUpForm() {
   const form = useForm<SignUpSchema>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
-      name: '',
+      username: '',
       email: '',
       password: '',
       passwordConfirm: '',
@@ -36,6 +36,8 @@ export default function SignUpForm() {
       if (!response.success) {
         const err = response.error;
         if (err.type === 'validation') {
+          console.log('validation error');
+
           err.issues.forEach((issue) => {
             const fieldName = issue.path[0] as keyof SignUpSchema;
             form.setError(fieldName, { type: 'server', message: issue.message });
@@ -50,7 +52,7 @@ export default function SignUpForm() {
         toast.success('Email verification was sent to you');
         return;
       }
-      console.log('SignUpForm', error);
+      console.error('SignUpForm', error);
     }
   }
   /**
@@ -64,7 +66,7 @@ export default function SignUpForm() {
       <form className="space-y-3" onSubmit={form.handleSubmit(onSubmit)}>
         <FormField
           control={form.control}
-          name="name"
+          name="username"
           render={({ field }) => (
             <FormItem>
               <FormLabel htmlFor="username">Username</FormLabel>

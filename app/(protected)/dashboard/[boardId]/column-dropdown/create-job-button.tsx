@@ -27,10 +27,9 @@ import { jobSchema } from '@/validations/jobValidation';
 import { PlusIcon } from 'lucide-react';
 import { ColumnFromDB } from '@/types/Column';
 import { Badge } from '@/components/ui/badge';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { createNewJob } from '../../../../features/dashboard/actions/createNewJob';
+import { createNewJob } from '../../../../../features/dashboard/actions/createNewJob';
 import { useEffect, useState } from 'react';
+import { Switch } from '@/components/ui/switch';
 
 type Props = {
   column: ColumnFromDB;
@@ -46,7 +45,7 @@ export default function CreateJobButton({ column, boardId }: Props) {
       title: '',
       location: '',
       salary: 0,
-      remote: 'false',
+      remote: false,
     },
   });
 
@@ -66,8 +65,13 @@ export default function CreateJobButton({ column, boardId }: Props) {
   }
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger>
-        <PlusIcon className="text-primary" />
+      <DialogTrigger className="w-full rounded-sm hover:bg-secondary">
+        <p className="text-primary flex gap-2 items-center">
+          <span>
+            <PlusIcon />
+          </span>
+          <span> Add item</span>
+        </p>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -166,22 +170,11 @@ export default function CreateJobButton({ column, boardId }: Props) {
                   <FormItem>
                     <FormLabel htmlFor="remote">Remote</FormLabel>
                     <FormControl>
-                      <RadioGroup
-                        onValueChange={field.onChange}
-                        defaultValue={field.value}
-                        defaultChecked={true}
-                        className="flex"
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
                         disabled={form.formState.isSubmitting}
-                      >
-                        <div className="flex items-center gap-2">
-                          <RadioGroupItem value="true" id="r1" />
-                          <Label htmlFor="r1">Yes</Label>
-                        </div>
-                        <div className="flex items-center gap-2">
-                          <RadioGroupItem value="false" id="r2" />
-                          <Label htmlFor="r2">No</Label>
-                        </div>
-                      </RadioGroup>
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>

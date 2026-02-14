@@ -9,21 +9,13 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card';
-import { MoreVerticalIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import DeleteColumnButton from './delete-column-button';
 import CreateColumnButton from './create-column-button';
-import CreateJobButton from './create-job-button';
+import CreateJobButton from './column-dropdown/create-job-button';
 import { fetchJobsByBoardId } from '../../../../features/dashboard/actions/fetchJobsByBoardId';
-import JobCard from './job-card';
-import MoveColumnButton from './move-column-button';
+import JobCard from './job-dropdown/job-card';
+import ColumnDropdown from './column-dropdown/column-dropdown';
+import { dataFormatter } from '@/lib/dataFormatter';
 
 type Props = {
   params: {
@@ -72,36 +64,14 @@ export default async function BoardPage({ params }: Props) {
                     </Badge>
                   </CardTitle>
                   <CardDescription className="text-background">
-                    Last update: {column.updatedAt.toLocaleDateString()}
+                    Last update: {dataFormatter(column.updatedAt)}
                   </CardDescription>
                   <CardAction>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger>
-                        <MoreVerticalIcon className="text-primary" />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent>
-                        <DropdownMenuGroup>
-                          {column.position !== 1 && (
-                            <MoveColumnButton
-                              boardId={column.boardId}
-                              columnId={column.id}
-                              direction="left"
-                            />
-                          )}
-                          {columns.length - 1 !== colIndex && (
-                            <MoveColumnButton
-                              boardId={column.boardId}
-                              columnId={column.id}
-                              direction="right"
-                            />
-                          )}
-                        </DropdownMenuGroup>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuGroup>
-                          <DeleteColumnButton column={column} />
-                        </DropdownMenuGroup>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
+                    <ColumnDropdown
+                      column={column}
+                      columns={columns}
+                      colIndex={colIndex}
+                    />
                   </CardAction>
                 </CardHeader>
                 <CardContent className="space-y-2 overflow-auto">
@@ -116,8 +86,7 @@ export default async function BoardPage({ params }: Props) {
                     />
                   ))}
                 </CardContent>
-                <CardFooter className="flex justify-between mt-auto">
-                  <p></p>
+                <CardFooter className="mt-auto">
                   <CreateJobButton column={column} boardId={boardId} />
                 </CardFooter>
               </Card>

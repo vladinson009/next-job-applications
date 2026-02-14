@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "drizzle:generate": "dotenv -e .env.local -- drizzle-kit generate",
+    "drizzle:migrate": "dotenv -e .env.local -- drizzle-kit migrate"
   },
   "dependencies": {
     "@auth/drizzle-adapter": "^1.11.1",
@@ -42,6 +44,7 @@
     "@types/nodemailer": "^7.0.9",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "dotenv-cli": "^11.0.0",
     "drizzle-kit": "^0.31.8",
     "eslint": "^9",
     "eslint-config-next": "16.1.6",

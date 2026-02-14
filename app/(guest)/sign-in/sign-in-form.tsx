@@ -23,7 +23,7 @@ import { credentialSignIn } from '@/features/auth/actions';
 
 export default function SignInForm() {
   const [isVerified, setIsVerified] = useState<boolean>(true);
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [user, setUser] = useState<{ username: string; email: string } | null>(null);
   const form = useForm<SignInSchema>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
@@ -49,12 +49,16 @@ export default function SignInForm() {
     }
   }
   async function verifyEmail() {
-    if (user?.email && user.name) {
+    if (user?.email && user.username) {
       // Create verification token and push in DB
       try {
         const token = await generateVerificationToken(user.email);
         const verifyUrl = `${process.env.NEXT_PUBLIC_APP_URL}/verify?token=${token}`;
-        await resendEmailHelper({ email: user.email, name: user.name, verifyUrl });
+        await resendEmailHelper({
+          email: user.email,
+          username: user.username,
+          verifyUrl,
+        });
         setIsVerified(true);
         toast.success('Email sent successfully');
         form.clearErrors();

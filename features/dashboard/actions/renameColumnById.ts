@@ -1,10 +1,10 @@
 'use server';
 
 import { db } from '@/db';
-import { BoardsTable } from '@/db/schema';
+import { ColumnsTable } from '@/db/schema';
 import { requireUser } from '@/lib/auth-server';
 import { isRedirectError } from '@/lib/redirectError';
-import { BoardFromDB } from '@/types/Board';
+import { ColumnFromDB } from '@/types/Column';
 import { and, eq, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 type ErrorCases =
@@ -12,17 +12,17 @@ type ErrorCases =
   | 'NON_EXISTING_NAME'
   | 'UNAUTHORIZED'
   | 'SERVER_ERROR';
-type RenameBoardByIdResponse =
+type RenameColumnByIdResponse =
   | { success: true }
   | { success: false; error: ErrorCases };
 
-export async function renameBoardById(
-  board: BoardFromDB,
+export async function renameColumnById(
+  column: ColumnFromDB,
   newName: string,
-): Promise<RenameBoardByIdResponse> {
+): Promise<RenameColumnByIdResponse> {
   try {
-    // Validate new board name
-    if (board.name.trim() === newName.trim()) {
+    // Validate new column name
+    if (column.name.trim() === newName.trim()) {
       return { success: false, error: 'CHOOSE_DIFFERENT_NAME' };
     }
     if (!newName) {
@@ -35,16 +35,16 @@ export async function renameBoardById(
       return { success: false, error: 'UNAUTHORIZED' };
     }
 
-    // Set new board name & updateAt field
+    // Set new column name & updateAt field
     await db
-      .update(BoardsTable)
+      .update(ColumnsTable)
       .set({
         name: newName,
         updatedAt: sql`NOW()`,
       })
-      .where(and(eq(BoardsTable.id, board.id), eq(BoardsTable.userId, user.id)));
+      .where(and(eq(ColumnsTable.id, column.id), eq(ColumnsTable.userId, user.id)));
 
-    revalidatePath('/dashboard');
+    revalidatePath(`/dashboard/${column.boardId}`);
 
     return {
       success: true,
@@ -53,7 +53,7 @@ export async function renameBoardById(
     if (isRedirectError(error)) {
       throw error;
     }
-    console.error('[renameBoardById]', error);
+    console.error('[renameColumnById]', error);
     return { success: false, error: 'SERVER_ERROR' };
   }
 }

@@ -6,10 +6,10 @@ import { requireUser } from '@/lib/auth-server';
 import { isRedirectError } from '@/lib/redirectError';
 import { JobsOutputSchema } from '@/types/Job';
 import { jobSchema } from '@/validations/jobValidation';
-import { and, eq, max, sql } from 'drizzle-orm';
+import { eq, sql } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
 
-export async function createNewJob(
+export async function editJob(
   data: JobsOutputSchema,
   columnId: string,
   boardId: string,
@@ -27,28 +27,13 @@ export async function createNewJob(
       return { success: false, error: 'UNAUTHORIZED' };
     }
 
-    // Query last job position
-    const [lastJobPosition] = await db
-      .select({
-        position: max(JobsTable.position),
-      })
-      .from(JobsTable)
-      .where(and(eq(JobsTable.columnId, columnId), eq(JobsTable.userId, user.id)))
-      .limit(1);
-
-    const nextPosition = (lastJobPosition.position ?? 0) + 1;
-
-    // Insert new job on next position
-    const newJobQuery = db.insert(JobsTable).values({
-      userId: user.id,
-      position: nextPosition,
-      columnId,
+    // Update job
+    const updateJobQuery = db.update(JobsTable).set({
       companyName: parsedData.data.companyName,
       location: parsedData.data.location,
       title: parsedData.data.title,
       remote: parsedData.data.remote ? true : false,
       salary: parsedData.data.salary || null,
-      boardId: boardId,
     });
     // Query touch column
     const touchColumnQuery = db
@@ -56,7 +41,7 @@ export async function createNewJob(
       .set({ updatedAt: sql`NOW()` })
       .where(eq(ColumnsTable.id, columnId));
 
-    await Promise.all([newJobQuery, touchColumnQuery]);
+    await Promise.all([updateJobQuery, touchColumnQuery]);
 
     revalidatePath(`/dashboard/${boardId}`);
 
@@ -65,7 +50,7 @@ export async function createNewJob(
     if (isRedirectError(error)) {
       throw error;
     }
-    console.error('[createNewJob]', error);
+    console.error('[editJob]', error);
     return {
       success: false,
       error: 'SERVER_ERROR',

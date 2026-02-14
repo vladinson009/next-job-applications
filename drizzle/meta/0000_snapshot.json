@@ -1,5 +1,5 @@
 {
-  "id": "3053fc52-d83d-456d-8907-3830fb711865",
+  "id": "d4050ae1-3e74-4dad-a02c-1655eb9d56e8",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -281,6 +281,12 @@
           "name": "name",
           "type": "varchar(100)",
           "primaryKey": false,
+          "notNull": false
+        },
+        "username": {
+          "name": "username",
+          "type": "varchar(100)",
+          "primaryKey": false,
           "notNull": true
         },
         "email": {
@@ -340,11 +346,11 @@
       "foreignKeys": {},
       "compositePrimaryKeys": {},
       "uniqueConstraints": {
-        "user_name_unique": {
-          "name": "user_name_unique",
+        "user_username_unique": {
+          "name": "user_username_unique",
           "nullsNotDistinct": false,
           "columns": [
-            "name"
+            "username"
           ]
         },
         "user_email_unique": {
@@ -474,6 +480,12 @@
           "primaryKey": false,
           "notNull": true
         },
+        "board_id": {
+          "name": "board_id",
+          "type": "uuid",
+          "primaryKey": false,
+          "notNull": true
+        },
         "created_at": {
           "name": "created_at",
           "type": "timestamp",
@@ -526,6 +538,19 @@
           "tableTo": "user",
           "columnsFrom": [
             "user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "jobs_board_id_boards_id_fk": {
+          "name": "jobs_board_id_boards_id_fk",
+          "tableFrom": "jobs",
+          "tableTo": "boards",
+          "columnsFrom": [
+            "board_id"
           ],
           "columnsTo": [
             "id"
