@@ -2,7 +2,6 @@
 import Container from '@/components/container';
 import ContentSeparator from '@/components/content-separator';
 import { Button } from '@/components/ui/button';
-import { requestUser } from '@/lib/auth-server';
 import { ChartAreaIcon, CheckLineIcon, Folder, UserLockIcon } from 'lucide-react';
 import Link from 'next/link';
 const features = [
