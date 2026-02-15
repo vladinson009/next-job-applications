@@ -13,7 +13,6 @@ const features = [
 ];
 
 export default async function HomePage() {
-  const user = await requestUser();
   return (
     <>
       <Container className="flex flex-col my-5">
