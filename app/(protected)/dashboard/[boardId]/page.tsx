@@ -47,11 +47,11 @@ export default async function BoardPage({ params }: Props) {
 
   return (
     <section className="grow">
-      <Container className="pb-5">
+      <Container className="pb-5 space-y-2">
+        {columns[0] && <h2>{columns[0].boardName}</h2>}
         <CreateColumnButton boardId={boardId} />
-        <h2>{columns && columns[0].boardName}</h2>
         <div className="flex gap-3 overflow-auto w-full min-h-125 h-[70vh]">
-          {columns?.length &&
+          {(columns?.length &&
             columns?.map((column, colIndex) => (
               <Card
                 className="bg-foreground shrink-0 w-1/3 min-w-80 even:bg-muted-foreground"
@@ -90,7 +90,8 @@ export default async function BoardPage({ params }: Props) {
                   <CreateJobButton column={column} boardId={boardId} />
                 </CardFooter>
               </Card>
-            ))}
+            ))) ||
+            ''}
         </div>
       </Container>
     </section>

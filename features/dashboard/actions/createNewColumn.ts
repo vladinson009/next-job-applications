@@ -45,11 +45,11 @@ export async function createNewColumn(name: string, boardId: string) {
       .set({ updatedAt: sql`NOW()` })
       .where(eq(BoardsTable.id, boardId));
 
-    const [newColumn] = await Promise.all([newColumnQuery, touchBoardQuery]);
+    await Promise.all([newColumnQuery, touchBoardQuery]);
 
     revalidatePath(`/dashboard/${boardId}`);
 
-    return { success: true, data: newColumn };
+    return { success: true };
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;

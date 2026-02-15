@@ -44,7 +44,7 @@ export default function ColumnDropdown({ column, columns, colIndex }: Props) {
             />
           )}
         </DropdownMenuGroup>
-        <DropdownMenuSeparator />
+        {columns.length > 1 && <DropdownMenuSeparator />}
         <DropdownMenuGroup>
           <RenameColumnButton column={column} setOpen={setOpen} />
           <DeleteColumnButton column={column} setOpen={setOpen} />
