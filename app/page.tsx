@@ -36,7 +36,7 @@ export default async function HomePage() {
           </div>
         </section>
       </Container>
-      <ContentSeparator direction="x" />
+      <ContentSeparator direction="y" />
 
       <Container>
         <h3>Visual demo of the columns</h3>
@@ -52,7 +52,7 @@ export default async function HomePage() {
           </div>
         </section>
       </Container>
-      <ContentSeparator direction="x" />
+      <ContentSeparator direction="y" />
       <Container className="flex flex-col sm:flex-row gap-4 sm:gap-0 sm:justify-between">
         <section>
           <h3>Features</h3>
@@ -73,16 +73,18 @@ export default async function HomePage() {
           </p>
         </section>
       </Container>
-      <ContentSeparator direction="x" />
-      <Container>
-        <section className="flex flex-col items-center justify-center gap-3">
-          <h2 className="text-center">Ready to organize your job search?</h2>
-          <Button asChild>
-            <Link href="/dashboard">Create Your First Board</Link>
-          </Button>
-        </section>
-      </Container>
-      <ContentSeparator direction="x" />
+      <ContentSeparator direction="y" />
+      <section className="bg-secondary py-5">
+        <Container className="">
+          <div className="flex flex-col items-center justify-center gap-3">
+            <h2 className="text-center">Ready to organize your job search?</h2>
+            <Button asChild>
+              <Link href="/dashboard">Create Your First Board</Link>
+            </Button>
+          </div>
+        </Container>
+      </section>
+      <ContentSeparator direction="y" />
     </>
   );
 }
