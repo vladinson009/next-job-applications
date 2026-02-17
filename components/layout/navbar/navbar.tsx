@@ -12,8 +12,8 @@ export default async function Navbar() {
   const isAuth = user?.id;
 
   return (
-    <section className="bg-secondary">
-      <Container className="pt-1 md:pt-2">
+    <section className="sticky bg-secondary/75">
+      <Container className="py-1 md:py-2">
         <header className="flex items-center justify-between">
           <Link className="hover:text-primary transition-colors" href="/">
             <BriefcaseBusiness size={50} />

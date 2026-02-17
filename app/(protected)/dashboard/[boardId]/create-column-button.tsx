@@ -37,10 +37,12 @@ export default function CreateColumnButton({ boardId }: { boardId: string }) {
   });
   async function onCreate(data: z.output<typeof columnSchema>) {
     try {
+      console.log('newcolu,nm');
       const response = await createNewColumn(data.name, boardId);
       if (!response.success) {
         return;
       }
+
       setOpen(false);
       form.reset();
     } catch {}
