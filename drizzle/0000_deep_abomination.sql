@@ -41,7 +41,7 @@ CREATE TABLE "user" (
 	"image" text,
 	"password" varchar(255),
 	"role" "role" DEFAULT 'user' NOT NULL,
-	"age" integer,
+	"birthday" date,
 	"created_at" timestamp DEFAULT now() NOT NULL,
 	"updated_at" timestamp DEFAULT now() NOT NULL,
 	CONSTRAINT "user_username_unique" UNIQUE("username"),

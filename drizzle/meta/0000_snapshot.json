@@ -1,5 +1,5 @@
 {
-  "id": "d4050ae1-3e74-4dad-a02c-1655eb9d56e8",
+  "id": "48b25e90-52c4-4d5c-9cd0-f87b049d1c18",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -321,9 +321,9 @@
           "notNull": true,
           "default": "'user'"
         },
-        "age": {
-          "name": "age",
-          "type": "integer",
+        "birthday": {
+          "name": "birthday",
+          "type": "date",
           "primaryKey": false,
           "notNull": false
         },

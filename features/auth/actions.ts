@@ -22,6 +22,8 @@ import { emailText } from '@/constants/emailVerification';
 import { AuthError } from 'next-auth';
 import { signIn, signOut } from '@/auth';
 import { Providers } from '@/types/Providers';
+import { requireUser } from '@/lib/auth-server';
+import { SALT_ROUNDS } from '@/constants/auth';
 
 export async function createUser(
   userInput: SignUpOutputSchema,
@@ -82,7 +84,7 @@ export async function createUser(
     }
 
     // Hash password
-    const hashedPassword = await hash(password, 12);
+    const hashedPassword = await hash(password, SALT_ROUNDS);
 
     // Insert user into DB
     const [user] = await db
@@ -169,4 +171,30 @@ export async function providerSignIn(provider: Providers) {
 
 export async function logoutAction() {
   await signOut({ redirectTo: '/sign-in' });
+}
+export async function fetchSafeUser() {
+  const user = await requireUser();
+
+  const [userFromDB] = await db
+    .select({
+      id: UsersTable.id,
+      name: UsersTable.name,
+      username: UsersTable.username,
+      email: UsersTable.email,
+      emailVerified: UsersTable.emailVerified,
+      image: UsersTable.image,
+      role: UsersTable.role,
+      birthday: UsersTable.birthday,
+      createdAt: UsersTable.createdAt,
+      updatedAt: UsersTable.updatedAt,
+      password: UsersTable.password,
+    })
+    .from(UsersTable)
+    .where(eq(UsersTable.id, user.id));
+
+  const isPassword = userFromDB.password ? true : false;
+
+  const safeUserFromDB = { ...userFromDB, password: isPassword };
+
+  return safeUserFromDB;
 }

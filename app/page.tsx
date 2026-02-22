@@ -39,7 +39,7 @@ export default async function HomePage() {
       <ContentSeparator direction="y" />
 
       <Container>
-        <h3>Visual demo of the columns</h3>
+        <h3 className="py-2">Visual demo of the columns</h3>
         <section className="flex gap-2 max-w-fit">
           <div className="flex-1">
             <img className="w-full" src="/board-1.png" alt="Board Example 1" />
