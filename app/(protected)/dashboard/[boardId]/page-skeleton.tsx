@@ -9,7 +9,6 @@ import {
   CardTitle,
 } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import CreateColumnButton from './create-column-button';
 import JobCard from './job-dropdown/job-card';
 import { Skeleton } from '@/components/ui/skeleton';
 import { MoreVerticalIcon, PlusIcon } from 'lucide-react';

@@ -1,4 +1,5 @@
 import {
+  date,
   integer,
   pgEnum,
   pgTable,
@@ -23,7 +24,7 @@ export const UsersTable = pgTable('user', {
   // Custom fields
   password: varchar('password', { length: 255 }),
   role: roleEnum('role').notNull().default('user'),
-  age: integer('age'),
+  birthday: date('birthday', { mode: 'date' }),
 
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),

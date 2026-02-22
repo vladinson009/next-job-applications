@@ -8,7 +8,7 @@ import { eq, or, sql } from 'drizzle-orm';
 import { signInSchema } from '@/validations/userValidation';
 import GitHub from 'next-auth/providers/github';
 import Google from 'next-auth/providers/google';
-import { qExistingUserByEmail, qInsertNewUser } from './db/queries/userQuery';
+import { qExistingUserByEmail, insertNewUser } from './db/queries/userQuery';
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
   adapter: DrizzleAdapter(db),
@@ -111,11 +111,12 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           username = `${baseUsername}${counter++}`;
         }
 
-        const newUser = await qInsertNewUser({
+        const newUser = await insertNewUser({
           email: user.email,
           name: user.name || '',
           username,
           image: user.image || null,
+          emailVerified: true,
         });
 
         user.id = newUser.id;
