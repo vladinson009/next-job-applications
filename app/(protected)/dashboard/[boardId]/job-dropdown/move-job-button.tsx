@@ -17,11 +17,11 @@ export default function MoveJobButton({ direction, columnId, jobId }: Props) {
   }
   return (
     <DropdownMenuItem
-      className="hover:cursor-pointer flex justify-between items-center"
+      className="hover:cursor-pointer flex gap-1 items-center"
       onClick={onMove}
     >
-      <span>Move {direction}</span>
       <span>{arrow}</span>
+      <span>Move {direction}</span>
     </DropdownMenuItem>
   );
 }

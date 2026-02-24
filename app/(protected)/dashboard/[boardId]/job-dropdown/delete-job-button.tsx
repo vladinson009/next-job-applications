@@ -25,11 +25,11 @@ export default function DeleteJobButton({ job }: Props) {
   return (
     <DropdownMenuItem asChild>
       <AlertDialog>
-        <AlertDialogTrigger className="flex justify-between items-center p-2 text-sm hover:bg-secondary text-left w-full rounded-md text-destructive">
-          <span>Delete</span>
+        <AlertDialogTrigger className="flex gap-1 items-center p-2 text-sm hover:bg-secondary text-left w-full rounded-md text-destructive">
           <span>
             <Trash2 className="size-5" />
           </span>
+          <span>Delete</span>
         </AlertDialogTrigger>
         <AlertDialogContent size="sm">
           <AlertDialogHeader>

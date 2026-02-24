@@ -47,7 +47,8 @@ export async function createNewJob(
       location: parsedData.data.location,
       title: parsedData.data.title,
       remote: parsedData.data.remote ? true : false,
-      salary: parsedData.data.salary || null,
+      salary: Number(parsedData.data.salary) || null,
+      url: parsedData.data.url || null,
       boardId: boardId,
     });
     // Query touch column

@@ -24,7 +24,7 @@ export const UsersTable = pgTable('user', {
   // Custom fields
   password: varchar('password', { length: 255 }),
   role: roleEnum('role').notNull().default('user'),
-  birthday: date('birthday', { mode: 'date' }),
+  birthday: date('birthday', { mode: 'string' }),
 
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),

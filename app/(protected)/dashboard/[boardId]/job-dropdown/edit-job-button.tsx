@@ -1,27 +1,15 @@
 'use client';
 
+import JobForm from '@/components/job-form';
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { Switch } from '@/components/ui/switch';
 import { editJob } from '@/features/dashboard/actions/editJob';
 import { JobFromDB } from '@/types/Job';
 import { jobSchema } from '@/validations/jobValidation';
@@ -46,6 +34,7 @@ export default function EditJobButton({ job, setOpen }: Props) {
       location: job.location,
       salary: job.salary ?? 0,
       remote: job.remote ?? false,
+      url: job.url ?? '',
     },
   });
 
@@ -55,8 +44,8 @@ export default function EditJobButton({ job, setOpen }: Props) {
     }
   }, [isModalOpen, form]);
 
-  async function onCreate(data: z.output<typeof jobSchema>) {
-    const result = await editJob(data, job.columnId, job.boardId);
+  async function onEdit(data: z.output<typeof jobSchema>) {
+    const result = await editJob(data, job.columnId, job.boardId, job.id);
     if (!result.success) {
       return;
     }
@@ -66,11 +55,11 @@ export default function EditJobButton({ job, setOpen }: Props) {
   }
   return (
     <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
-      <DialogTrigger className="flex justify-between items-center p-2 text-sm hover:bg-secondary text-left w-full rounded-md">
-        <span>Edit</span>
+      <DialogTrigger className="flex gap-1 items-center p-2 text-sm hover:bg-secondary text-left w-full rounded-md">
         <span>
           <EditIcon className="size-5" />
         </span>
+        <span>Edit</span>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
@@ -79,122 +68,9 @@ export default function EditJobButton({ job, setOpen }: Props) {
           </DialogTitle>
           <DialogDescription className="sr-only">Edit job</DialogDescription>
         </DialogHeader>
-        <Form {...form}>
-          <form className="space-y-3" onSubmit={form.handleSubmit(onCreate)}>
-            <FormField
-              control={form.control}
-              name="companyName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="company-name">
-                    Company name<span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      id="company-name"
-                      type="text"
-                      disabled={form.formState.isSubmitting}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="title">
-                    Job title<span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      id="title"
-                      type="text"
-                      disabled={form.formState.isSubmitting}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="location"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel htmlFor="location">
-                    Location<span className="text-destructive">*</span>
-                  </FormLabel>
-                  <FormControl>
-                    <Input
-                      id="location"
-                      type="text"
-                      disabled={form.formState.isSubmitting}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <fieldset className="flex gap-5">
-              <FormField
-                control={form.control}
-                name="salary"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor="salary">Salary</FormLabel>
-                    <FormControl>
-                      <Input
-                        id="salary"
-                        type="number"
-                        disabled={form.formState.isSubmitting}
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="remote"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel htmlFor="remote">Remote</FormLabel>
-                    <FormControl>
-                      <Switch
-                        checked={field.value}
-                        onCheckedChange={field.onChange}
-                        disabled={form.formState.isSubmitting}
-                      />
-                    </FormControl>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-            </fieldset>
-            <DialogFooter>
-              <DialogClose asChild>
-                <Button
-                  onClick={setOpen.bind(null, false)}
-                  type="button"
-                  variant="outline"
-                >
-                  Close
-                </Button>
-              </DialogClose>
-
-              <Button disabled={form.formState.isSubmitting} type="submit">
-                {form.formState.isSubmitting ? 'Thinking...' : 'Save changes'}
-              </Button>
-            </DialogFooter>
-          </form>
-        </Form>
+        <JobForm form={form} onSubmit={onEdit}>
+          Edit
+        </JobForm>
       </DialogContent>
     </Dialog>
   );

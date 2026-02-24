@@ -4,7 +4,7 @@ import { Calendar } from '@/components/ui/calendar';
 import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field';
 import { Input } from '@/components/ui/input';
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
-import { changeBirthdayDate } from '@/db/queries/userQuery';
+import { changeBirthdayDate, changeUsername } from '@/db/queries/userQuery';
 import { dataFormatter } from '@/lib/dataFormatter';
 import { SafeUserFromDB } from '@/types/User';
 import {
@@ -51,8 +51,18 @@ export default function UserDetailsForm({ user }: { user: SafeUserFromDB }) {
   }
 
   // Username form submit handler
-  function onUsernameSubmit() {
-    console.log('submitted');
+  async function onUsernameSubmit(data: ChangeUsernameSchema) {
+    const result = await changeUsername(data);
+
+    if (!result.success && result.error) {
+      usernameForm.setError('username', {
+        type: 'server',
+        message: result.error,
+      });
+
+      return;
+    }
+    toast.success('Username changed successfully');
   }
 
   return (
@@ -64,7 +74,7 @@ export default function UserDetailsForm({ user }: { user: SafeUserFromDB }) {
             control={usernameForm.control}
             render={({ field, fieldState }) => (
               <Field className="gap-1" data-invalid={fieldState.invalid}>
-                <FieldLabel htmlFor={field.name}>Change username</FieldLabel>
+                <FieldLabel htmlFor={field.name}>Username</FieldLabel>
                 <Input
                   {...field}
                   type="text"
