@@ -63,6 +63,7 @@ CREATE TABLE "jobs" (
 	"salary" integer,
 	"remote" boolean DEFAULT false,
 	"position" integer NOT NULL,
+	"url" varchar(250),
 	"column_id" uuid NOT NULL,
 	"user_id" uuid NOT NULL,
 	"board_id" uuid NOT NULL,
