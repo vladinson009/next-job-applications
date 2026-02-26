@@ -13,6 +13,7 @@ export async function editJob(
   data: JobsOutputSchema,
   columnId: string,
   boardId: string,
+  jobId: string,
 ) {
   try {
     // Zod validation
@@ -28,13 +29,16 @@ export async function editJob(
     }
 
     // Update job
-    const updateJobQuery = db.update(JobsTable).set({
-      companyName: parsedData.data.companyName,
-      location: parsedData.data.location,
-      title: parsedData.data.title,
-      remote: parsedData.data.remote ? true : false,
-      salary: parsedData.data.salary || null,
-    });
+    const updateJobQuery = db
+      .update(JobsTable)
+      .set({
+        companyName: parsedData.data.companyName,
+        location: parsedData.data.location,
+        title: parsedData.data.title,
+        remote: parsedData.data.remote ? true : false,
+        salary: Number(parsedData.data.salary) || null,
+      })
+      .where(eq(JobsTable.id, jobId));
     // Query touch column
     const touchColumnQuery = db
       .update(ColumnsTable)

@@ -19,6 +19,7 @@ export const JobsTable = pgTable(
     salary: integer('salary'),
     remote: boolean('remote').default(false),
     position: integer('position').notNull(),
+    url: varchar('url', { length: 250 }),
     columnId: uuid('column_id')
       .notNull()
       .references(() => ColumnsTable.id, { onDelete: 'cascade' }),

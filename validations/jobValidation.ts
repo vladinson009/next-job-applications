@@ -13,6 +13,10 @@ export const jobSchema = z.object({
     .string('Location must be a text')
     .min(1, 'Location is required')
     .max(255, 'Location length is too long. Limit 255 characters'),
-  salary: z.coerce.number<number>('Salary must be a number').optional(),
+  salary: z.coerce
+    .number<number>('Salary must be a number')
+    .optional()
+    .or(z.string().length(0)),
   remote: z.boolean('Remote must be a boolean').default(false).nonoptional(),
+  url: z.url().or(z.literal('')),
 });

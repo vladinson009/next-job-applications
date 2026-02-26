@@ -30,6 +30,7 @@ export default function BoardPageSkeleton() {
     title: 'Loading...',
     updatedAt: date,
     userId: '1',
+    url: '',
   };
 
   return (
@@ -65,6 +66,7 @@ export default function BoardPageSkeleton() {
                     canMoveDown={index < 3 - 1}
                     canMoveLeft={colIndex > 0}
                     canMoveRight={colIndex < 3 - 1}
+                    columns={[]}
                   />
                 ))}
               </CardContent>

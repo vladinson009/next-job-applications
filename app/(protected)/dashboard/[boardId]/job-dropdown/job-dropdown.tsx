@@ -8,13 +8,15 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { MoreVerticalIcon } from 'lucide-react';
 import MoveJobButton from './move-job-button';
-import MoveJobInColumnButton from './move-job-in-column-button';
 import EditJobButton from './edit-job-button';
 import DeleteJobButton from './delete-job-button';
 import { JobFromDB } from '@/types/Job';
 import { useState } from 'react';
+import NestedMoveDropdown from './nested-move-dropdown';
+import { ColumnFromDB } from '@/types/Column';
 type Props = {
   job: JobFromDB;
+  columns: ColumnFromDB[];
   canMoveUp: boolean;
   canMoveDown: boolean;
   canMoveLeft: boolean;
@@ -22,6 +24,7 @@ type Props = {
 };
 export function JobDropdown({
   job,
+  columns,
   canMoveUp,
   canMoveDown,
   canMoveLeft,
@@ -43,8 +46,8 @@ export function JobDropdown({
             <MoveJobButton columnId={job.columnId} jobId={job.id} direction="down" />
           )}
           {(canMoveDown || canMoveUp) && <DropdownMenuSeparator />}
-
-          {canMoveLeft && (
+          <NestedMoveDropdown columns={columns} job={job} />
+          {/* {canMoveLeft && (
             <MoveJobInColumnButton
               columnId={job.columnId}
               direction="left"
@@ -57,7 +60,7 @@ export function JobDropdown({
               direction="right"
               jobId={job.id}
             />
-          )}
+          )} */}
         </DropdownMenuGroup>
         {(canMoveLeft || canMoveRight) && <DropdownMenuSeparator />}
         <EditJobButton job={job} setOpen={setOpen} />

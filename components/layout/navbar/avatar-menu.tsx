@@ -35,7 +35,7 @@ export default function AvatarMenu({ user }: Props) {
         <Avatar size="lg">
           <AvatarImage src={user?.image ?? ''} alt={user?.name?.at(0)} />
           <AvatarFallback className="bg-primary text-color2 text-2xl">
-            {user?.name?.at(0)}
+            {user?.username?.at(0)}
           </AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

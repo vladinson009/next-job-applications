@@ -13,9 +13,11 @@ import { JobFromDB } from '@/types/Job';
 import Link from 'next/link';
 import { JobDropdown } from './job-dropdown';
 import { dataFormatter } from '@/lib/dataFormatter';
+import { ColumnFromDB } from '@/types/Column';
 
 type Props = {
   job: JobFromDB;
+  columns: ColumnFromDB[];
   canMoveUp: boolean;
   canMoveDown: boolean;
   canMoveLeft: boolean;
@@ -24,6 +26,7 @@ type Props = {
 
 export default function JobCard({
   job,
+  columns,
   canMoveUp,
   canMoveDown,
   canMoveLeft,
@@ -41,6 +44,7 @@ export default function JobCard({
             canMoveUp={canMoveUp}
             canMoveDown={canMoveDown}
             job={job}
+            columns={columns}
           />
         </CardAction>
       </CardHeader>
@@ -61,11 +65,13 @@ export default function JobCard({
             <span> {job.remote ? 'Yes' : 'No'}</span>
           </p>
         )}
-        <p className="flex justify-between">
-          <Button asChild variant="link">
-            <Link href="#">Visit page</Link>
-          </Button>
-        </p>
+        {job.url && (
+          <p className="flex justify-between">
+            <Button asChild variant="link">
+              <Link href={job.url}>Visit page</Link>
+            </Button>
+          </p>
+        )}
       </CardContent>
       <CardFooter className="flex flex-wrap items-start gap-1">
         <Badge className="bg-foreground">

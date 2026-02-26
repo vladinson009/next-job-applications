@@ -73,6 +73,7 @@ export default async function BoardPageData({ boardId }: { boardId: string }) {
                     canMoveDown={index < sortedJobs[column.id].length - 1}
                     canMoveLeft={colIndex > 0}
                     canMoveRight={colIndex < columns.length - 1}
+                    columns={columns}
                   />
                 ))}
               </CardContent>

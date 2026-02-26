@@ -18,3 +18,8 @@ export function dataFormatter(date: Date, isHours?: boolean) {
 
   return result;
 }
+export function formatDateForDB(date: Date) {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(
+    date.getDate(),
+  ).padStart(2, '0')}`;
+}
